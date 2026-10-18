@@ -1,0 +1,74 @@
+[
+  {
+    "ticket_id": "S-01",
+    "product_category": "washing_machine",
+    "complaint_text": "machine fills with water then just sits there, drum never turns, display shows E21",
+    "product_age_days": 410
+  },
+  {
+    "ticket_id": "S-02",
+    "product_category": "oven_or_cooktop",
+    "complaint_text": "There was a burning smell and a spark from the back when I switched it on, it is off now",
+    "product_age_days": 95
+  },
+  {
+    "ticket_id": "S-03",
+    "product_category": "refrigerator",
+    "complaint_text": "delivered yesterday, the doors are not level and one does not close properly",
+    "product_age_days": 1
+  },
+  {
+    "ticket_id": "S-04",
+    "product_category": "water_heater",
+    "complaint_text": "Water is not hot enough for a shower. I can smell gas whenever the geyser is on.",
+    "product_age_days": 800
+  },
+  {
+    "ticket_id": "S-05",
+    "product_category": "dishwasher",
+    "complaint_text": "Display shows E21",
+    "product_age_days": 120
+  },
+  {
+    "ticket_id": "S-06",
+    "product_category": "refrigerator",
+    "complaint_text": "Thanks for the quick service, the technician was very polite!",
+    "product_age_days": 60
+  },
+  {
+    "ticket_id": "S-07",
+    "product_category": "washing_machine",
+    "complaint_text": "The washer makes a loud banging noise when running. Also it is completely dead now and will not switch on.",
+    "product_age_days": 900
+  },
+  {
+    "ticket_id": "S-08",
+    "product_category": "air_conditioner",
+    "complaint_text": "Water is dripping from the indoor unit onto the wall.",
+    "product_age_days": null
+  },
+  {
+    "ticket_id": "S-09",
+    "product_category": "microwave",
+    "complaint_text": "PLS HELP smkoe started comming out of the microwve, switched it off imediately",
+    "product_age_days": 300
+  },
+  {
+    "ticket_id": "S-10",
+    "product_category": "refrigerator",
+    "complaint_text": "fridge thanda nahi ho raha hai, sab khana kharab ho gaya",
+    "product_age_days": 1500
+  },
+  {
+    "ticket_id": "S-11",
+    "product_category": "dishwasher",
+    "complaint_text": "Water does not drain, the filter looks blocked and dirty water stays at the bottom.",
+    "product_age_days": 700
+  },
+  {
+    "ticket_id": "S-12",
+    "product_category": "oven_or_cooktop",
+    "complaint_text": "The oven door will not close fully, the hinge is bent.",
+    "product_age_days": 1100
+  }
+]

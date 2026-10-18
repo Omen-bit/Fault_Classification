@@ -1,0 +1,1347 @@
+{
+ "model": {
+  "created": "2026-10-13 18:26 UTC",
+  "n_tickets": 1000,
+  "n_sentences": 1924,
+  "n_templates": 120,
+  "train_seconds": 25.45
+ },
+ "labels": [
+  "no_power",
+  "not_heating",
+  "not_cooling",
+  "water_leak",
+  "drainage_or_blockage",
+  "noise_or_vibration",
+  "door_seal_or_latch",
+  "control_panel_or_display",
+  "electrical_or_control_board",
+  "motor_or_drive",
+  "installation_or_setup",
+  "other"
+ ],
+ "schemes": {
+  "A_seen_wording": {
+   "tickets": 1000,
+   "labels_present": 12,
+   "macro_f1": 0.992,
+   "macro_f1_ci95": [
+    0.9863,
+    0.9967
+   ],
+   "weighted_f1": 0.991,
+   "accuracy": 0.991,
+   "balanced_accuracy": 0.9912,
+   "cohen_kappa": 0.99,
+   "mcc": 0.99,
+   "escalation": {
+    "tp": 163,
+    "fn": 0,
+    "fp": 0,
+    "tn": 837,
+    "recall": 1.0,
+    "precision": 1.0,
+    "specificity": 1.0,
+    "f1": 1.0,
+    "f2": 1.0,
+    "by_family": [
+     {
+      "family": "arcing",
+      "tickets": 1,
+      "caught": 1,
+      "recall": 1.0
+     },
+     {
+      "family": "burning smell",
+      "tickets": 14,
+      "caught": 14,
+      "recall": 1.0
+     },
+     {
+      "family": "electric shock",
+      "tickets": 20,
+      "caught": 20,
+      "recall": 1.0
+     },
+     {
+      "family": "fire",
+      "tickets": 23,
+      "caught": 23,
+      "recall": 1.0
+     },
+     {
+      "family": "gas smell (C2)",
+      "tickets": 20,
+      "caught": 20,
+      "recall": 1.0
+     },
+     {
+      "family": "smoke",
+      "tickets": 25,
+      "caught": 25,
+      "recall": 1.0
+     },
+     {
+      "family": "sparks",
+      "tickets": 37,
+      "caught": 37,
+      "recall": 1.0
+     },
+     {
+      "family": "tripped supply",
+      "tickets": 23,
+      "caught": 23,
+      "recall": 1.0
+     }
+    ]
+   },
+   "confidence": {
+    "ece": 0.0875,
+    "mce": 0.8,
+    "brier": 0.046,
+    "auroc": 0.8398,
+    "accuracy_top80": 0.9975,
+    "reliability": [
+     {
+      "bin": "0.1-0.2",
+      "n": 43,
+      "confidence": 0.2,
+      "accuracy": 1.0
+     },
+     {
+      "bin": "0.3-0.4",
+      "n": 2,
+      "confidence": 0.4,
+      "accuracy": 0.5
+     },
+     {
+      "bin": "0.6-0.7",
+      "n": 143,
+      "confidence": 0.7,
+      "accuracy": 0.965
+     },
+     {
+      "bin": "0.8-0.9",
+      "n": 4,
+      "confidence": 0.858,
+      "accuracy": 0.75
+     },
+     {
+      "bin": "0.9-1.0",
+      "n": 808,
+      "confidence": 0.979,
+      "accuracy": 0.998
+     }
+    ],
+    "risk_coverage": [
+     {
+      "coverage": 1.0,
+      "accuracy": 0.991
+     },
+     {
+      "coverage": 0.9,
+      "accuracy": 0.9944
+     },
+     {
+      "coverage": 0.8,
+      "accuracy": 0.9975
+     },
+     {
+      "coverage": 0.7,
+      "accuracy": 0.9986
+     },
+     {
+      "coverage": 0.6,
+      "accuracy": 0.9983
+     },
+     {
+      "coverage": 0.5,
+      "accuracy": 1.0
+     }
+    ]
+   },
+   "latency_ms": {
+    "p50": 6.22,
+    "p95": 10.57,
+    "p99": 12.27,
+    "max": 15.41
+   },
+   "decision_paths": {
+    "model": 575,
+    "C1": 143,
+    "C5": 143,
+    "C3": 56,
+    "C6": 43,
+    "C4": 38,
+    "weak": 2
+   },
+   "c6_max_confidence": 0.2,
+   "per_class": [
+    {
+     "label": "no_power",
+     "precision": 0.951,
+     "recall": 0.99,
+     "f1": 0.97,
+     "support": 98
+    },
+    {
+     "label": "not_heating",
+     "precision": 0.978,
+     "recall": 1.0,
+     "f1": 0.989,
+     "support": 91
+    },
+    {
+     "label": "not_cooling",
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 33
+    },
+    {
+     "label": "water_leak",
+     "precision": 1.0,
+     "recall": 0.981,
+     "f1": 0.99,
+     "support": 53
+    },
+    {
+     "label": "drainage_or_blockage",
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 45
+    },
+    {
+     "label": "noise_or_vibration",
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 90
+    },
+    {
+     "label": "door_seal_or_latch",
+     "precision": 1.0,
+     "recall": 0.949,
+     "f1": 0.974,
+     "support": 78
+    },
+    {
+     "label": "control_panel_or_display",
+     "precision": 0.993,
+     "recall": 0.986,
+     "f1": 0.989,
+     "support": 141
+    },
+    {
+     "label": "electrical_or_control_board",
+     "precision": 0.993,
+     "recall": 1.0,
+     "f1": 0.997,
+     "support": 151
+    },
+    {
+     "label": "motor_or_drive",
+     "precision": 1.0,
+     "recall": 0.989,
+     "f1": 0.994,
+     "support": 87
+    },
+    {
+     "label": "installation_or_setup",
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 90
+    },
+    {
+     "label": "other",
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 43
+    }
+   ],
+   "confusion_matrix": [
+    [
+     97,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     91,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     33,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     1,
+     0,
+     52,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     45,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     90,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     4,
+     0,
+     0,
+     0,
+     0,
+     0,
+     74,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     139,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     151,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     86,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     90,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     43
+    ]
+   ],
+   "two_symptom_accuracy": 0.9924,
+   "single_symptom_accuracy": 0.9908,
+   "macro_precision": 0.993,
+   "macro_recall": 0.9912,
+   "top_confusions": [
+    {
+     "true": "door_seal_or_latch",
+     "predicted": "no_power",
+     "count": 4
+    },
+    {
+     "true": "water_leak",
+     "predicted": "not_heating",
+     "count": 1
+    },
+    {
+     "true": "no_power",
+     "predicted": "control_panel_or_display",
+     "count": 1
+    },
+    {
+     "true": "motor_or_drive",
+     "predicted": "electrical_or_control_board",
+     "count": 1
+    },
+    {
+     "true": "control_panel_or_display",
+     "predicted": "not_heating",
+     "count": 1
+    },
+    {
+     "true": "control_panel_or_display",
+     "predicted": "no_power",
+     "count": 1
+    }
+   ],
+   "slices": {
+    "product": [
+     {
+      "slice": "air_conditioner",
+      "tickets": 122,
+      "accuracy": 0.9918,
+      "macro_f1": 0.9928
+     },
+     {
+      "slice": "dishwasher",
+      "tickets": 142,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+     },
+     {
+      "slice": "microwave",
+      "tickets": 123,
+      "accuracy": 0.9919,
+      "macro_f1": 0.9931
+     },
+     {
+      "slice": "oven_or_cooktop",
+      "tickets": 167,
+      "accuracy": 0.994,
+      "macro_f1": 0.995
+     },
+     {
+      "slice": "refrigerator",
+      "tickets": 174,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+     },
+     {
+      "slice": "washing_machine",
+      "tickets": 176,
+      "accuracy": 0.9773,
+      "macro_f1": 0.9798
+     },
+     {
+      "slice": "water_heater",
+      "tickets": 96,
+      "accuracy": 0.9792,
+      "macro_f1": 0.9743
+     }
+    ],
+    "decision_path": [
+     {
+      "slice": "C1",
+      "tickets": 143,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+     },
+     {
+      "slice": "C3",
+      "tickets": 56,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+     },
+     {
+      "slice": "C4",
+      "tickets": 38,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+     },
+     {
+      "slice": "C5",
+      "tickets": 143,
+      "accuracy": 0.965,
+      "macro_f1": 0.9772
+     },
+     {
+      "slice": "C6",
+      "tickets": 43,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+     },
+     {
+      "slice": "model",
+      "tickets": 575,
+      "accuracy": 0.9948,
+      "macro_f1": 0.991
+     },
+     {
+      "slice": "weak",
+      "tickets": 2,
+      "accuracy": 0.5,
+      "macro_f1": 0.5
+     }
+    ],
+    "text_length": [
+     {
+      "slice": "1. under 60 characters",
+      "tickets": 65,
+      "accuracy": 0.9846,
+      "macro_f1": 0.9947
+     },
+     {
+      "slice": "2. 60 to 149 characters",
+      "tickets": 458,
+      "accuracy": 0.9891,
+      "macro_f1": 0.9906
+     },
+     {
+      "slice": "3. 150 or more characters",
+      "tickets": 477,
+      "accuracy": 0.9937,
+      "macro_f1": 0.9932
+     }
+    ],
+    "symptom_count": [
+     {
+      "slice": "one symptom or none",
+      "tickets": 869,
+      "accuracy": 0.9908,
+      "macro_f1": 0.9906
+     },
+     {
+      "slice": "two symptoms",
+      "tickets": 131,
+      "accuracy": 0.9924,
+      "macro_f1": 0.9944
+     }
+    ]
+   },
+   "title": "A. Random stratified 5-fold",
+   "note": "Same wording in train and test. Optimistic."
+  },
+  "B_unseen_wording": {
+   "tickets": 948,
+   "labels_present": 12,
+   "macro_f1": 0.9743,
+   "macro_f1_ci95": [
+    0.9633,
+    0.9843
+   ],
+   "weighted_f1": 0.9758,
+   "accuracy": 0.9757,
+   "balanced_accuracy": 0.9775,
+   "cohen_kappa": 0.9732,
+   "mcc": 0.9733,
+   "escalation": {
+    "tp": 163,
+    "fn": 0,
+    "fp": 0,
+    "tn": 785,
+    "recall": 1.0,
+    "precision": 1.0,
+    "specificity": 1.0,
+    "f1": 1.0,
+    "f2": 1.0,
+    "by_family": [
+     {
+      "family": "arcing",
+      "tickets": 1,
+      "caught": 1,
+      "recall": 1.0
+     },
+     {
+      "family": "burning smell",
+      "tickets": 14,
+      "caught": 14,
+      "recall": 1.0
+     },
+     {
+      "family": "electric shock",
+      "tickets": 20,
+      "caught": 20,
+      "recall": 1.0
+     },
+     {
+      "family": "fire",
+      "tickets": 23,
+      "caught": 23,
+      "recall": 1.0
+     },
+     {
+      "family": "gas smell (C2)",
+      "tickets": 20,
+      "caught": 20,
+      "recall": 1.0
+     },
+     {
+      "family": "smoke",
+      "tickets": 25,
+      "caught": 25,
+      "recall": 1.0
+     },
+     {
+      "family": "sparks",
+      "tickets": 37,
+      "caught": 37,
+      "recall": 1.0
+     },
+     {
+      "family": "tripped supply",
+      "tickets": 23,
+      "caught": 23,
+      "recall": 1.0
+     }
+    ]
+   },
+   "confidence": {
+    "ece": 0.085,
+    "mce": 0.75,
+    "brier": 0.056,
+    "auroc": 0.6754,
+    "accuracy_top80": 0.9868,
+    "reliability": [
+     {
+      "bin": "0.1-0.2",
+      "n": 52,
+      "confidence": 0.2,
+      "accuracy": 0.827
+     },
+     {
+      "bin": "0.2-0.3",
+      "n": 1,
+      "confidence": 0.25,
+      "accuracy": 1.0
+     },
+     {
+      "bin": "0.6-0.7",
+      "n": 151,
+      "confidence": 0.7,
+      "accuracy": 0.967
+     },
+     {
+      "bin": "0.7-0.8",
+      "n": 1,
+      "confidence": 0.74,
+      "accuracy": 1.0
+     },
+     {
+      "bin": "0.9-1.0",
+      "n": 743,
+      "confidence": 0.979,
+      "accuracy": 0.988
+     }
+    ],
+    "risk_coverage": [
+     {
+      "coverage": 1.0,
+      "accuracy": 0.9757
+     },
+     {
+      "coverage": 0.9,
+      "accuracy": 0.9883
+     },
+     {
+      "coverage": 0.8,
+      "accuracy": 0.9868
+     },
+     {
+      "coverage": 0.7,
+      "accuracy": 0.9894
+     },
+     {
+      "coverage": 0.6,
+      "accuracy": 0.9877
+     },
+     {
+      "coverage": 0.5,
+      "accuracy": 0.9852
+     }
+    ]
+   },
+   "latency_ms": {
+    "p50": 6.24,
+    "p95": 10.22,
+    "p99": 12.41,
+    "max": 19.87
+   },
+   "decision_paths": {
+    "model": 546,
+    "C5": 151,
+    "C1": 143,
+    "C3": 55,
+    "C6": 52,
+    "weak": 1
+   },
+   "c6_max_confidence": 0.2,
+   "per_class": [
+    {
+     "label": "no_power",
+     "precision": 0.95,
+     "recall": 0.99,
+     "f1": 0.97,
+     "support": 97
+    },
+    {
+     "label": "not_heating",
+     "precision": 0.988,
+     "recall": 0.879,
+     "f1": 0.93,
+     "support": 91
+    },
+    {
+     "label": "not_cooling",
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 33
+    },
+    {
+     "label": "water_leak",
+     "precision": 1.0,
+     "recall": 0.981,
+     "f1": 0.99,
+     "support": 53
+    },
+    {
+     "label": "drainage_or_blockage",
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 45
+    },
+    {
+     "label": "noise_or_vibration",
+     "precision": 0.978,
+     "recall": 1.0,
+     "f1": 0.989,
+     "support": 89
+    },
+    {
+     "label": "door_seal_or_latch",
+     "precision": 0.987,
+     "recall": 0.949,
+     "f1": 0.967,
+     "support": 78
+    },
+    {
+     "label": "control_panel_or_display",
+     "precision": 0.968,
+     "recall": 0.989,
+     "f1": 0.979,
+     "support": 93
+    },
+    {
+     "label": "electrical_or_control_board",
+     "precision": 0.993,
+     "recall": 1.0,
+     "f1": 0.997,
+     "support": 151
+    },
+    {
+     "label": "motor_or_drive",
+     "precision": 0.988,
+     "recall": 0.942,
+     "f1": 0.964,
+     "support": 86
+    },
+    {
+     "label": "installation_or_setup",
+     "precision": 1.0,
+     "recall": 1.0,
+     "f1": 1.0,
+     "support": 89
+    },
+    {
+     "label": "other",
+     "precision": 0.827,
+     "recall": 1.0,
+     "f1": 0.905,
+     "support": 43
+    }
+   ],
+   "confusion_matrix": [
+    [
+     96,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     80,
+     0,
+     0,
+     0,
+     2,
+     1,
+     2,
+     0,
+     1,
+     0,
+     5
+    ],
+    [
+     0,
+     0,
+     33,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     1,
+     0,
+     52,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     45,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     89,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     4,
+     0,
+     0,
+     0,
+     0,
+     0,
+     74,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     92,
+     0,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     151,
+     0,
+     0,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     1,
+     81,
+     0,
+     4
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     89,
+     0
+    ],
+    [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     43
+    ]
+   ],
+   "two_symptom_accuracy": 0.9462,
+   "single_symptom_accuracy": 0.9804,
+   "macro_precision": 0.9733,
+   "macro_recall": 0.9775,
+   "top_confusions": [
+    {
+     "true": "not_heating",
+     "predicted": "other",
+     "count": 5
+    },
+    {
+     "true": "motor_or_drive",
+     "predicted": "other",
+     "count": 4
+    },
+    {
+     "true": "door_seal_or_latch",
+     "predicted": "no_power",
+     "count": 4
+    },
+    {
+     "true": "not_heating",
+     "predicted": "noise_or_vibration",
+     "count": 2
+    },
+    {
+     "true": "not_heating",
+     "predicted": "control_panel_or_display",
+     "count": 2
+    },
+    {
+     "true": "water_leak",
+     "predicted": "not_heating",
+     "count": 1
+    },
+    {
+     "true": "not_heating",
+     "predicted": "motor_or_drive",
+     "count": 1
+    },
+    {
+     "true": "not_heating",
+     "predicted": "door_seal_or_latch",
+     "count": 1
+    }
+   ],
+   "slices": {
+    "product": [
+     {
+      "slice": "air_conditioner",
+      "tickets": 115,
+      "accuracy": 0.9913,
+      "macro_f1": 0.9926
+     },
+     {
+      "slice": "dishwasher",
+      "tickets": 132,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+     },
+     {
+      "slice": "microwave",
+      "tickets": 119,
+      "accuracy": 0.9244,
+      "macro_f1": 0.9169
+     },
+     {
+      "slice": "oven_or_cooktop",
+      "tickets": 158,
+      "accuracy": 0.9684,
+      "macro_f1": 0.9501
+     },
+     {
+      "slice": "refrigerator",
+      "tickets": 165,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+     },
+     {
+      "slice": "washing_machine",
+      "tickets": 168,
+      "accuracy": 0.9583,
+      "macro_f1": 0.9625
+     },
+     {
+      "slice": "water_heater",
+      "tickets": 91,
+      "accuracy": 0.989,
+      "macro_f1": 0.9851
+     }
+    ],
+    "decision_path": [
+     {
+      "slice": "C1",
+      "tickets": 143,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+     },
+     {
+      "slice": "C3",
+      "tickets": 55,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+     },
+     {
+      "slice": "C5",
+      "tickets": 151,
+      "accuracy": 0.9669,
+      "macro_f1": 0.9777
+     },
+     {
+      "slice": "C6",
+      "tickets": 52,
+      "accuracy": 0.8269,
+      "macro_f1": 0.3018
+     },
+     {
+      "slice": "model",
+      "tickets": 546,
+      "accuracy": 0.9835,
+      "macro_f1": 0.9821
+     },
+     {
+      "slice": "weak",
+      "tickets": 1,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+     }
+    ],
+    "text_length": [
+     {
+      "slice": "1. under 60 characters",
+      "tickets": 17,
+      "accuracy": 1.0,
+      "macro_f1": 1.0
+     },
+     {
+      "slice": "2. 60 to 149 characters",
+      "tickets": 457,
+      "accuracy": 0.9737,
+      "macro_f1": 0.9742
+     },
+     {
+      "slice": "3. 150 or more characters",
+      "tickets": 474,
+      "accuracy": 0.9768,
+      "macro_f1": 0.9781
+     }
+    ],
+    "symptom_count": [
+     {
+      "slice": "one symptom or none",
+      "tickets": 818,
+      "accuracy": 0.9804,
+      "macro_f1": 0.978
+     },
+     {
+      "slice": "two symptoms",
+      "tickets": 130,
+      "accuracy": 0.9462,
+      "macro_f1": 0.9588
+     }
+    ]
+   },
+   "title": "B. Leave-template-out 5-fold",
+   "note": "Symptom, non-complaint and filler wording held out."
+  },
+  "C_seed_only": {
+   "tickets": 1000,
+   "labels_present": 12,
+   "macro_f1": 0.9587,
+   "macro_f1_ci95": [
+    0.946,
+    0.9708
+   ],
+   "weighted_f1": 0.9569,
+   "accuracy": 0.957,
+   "balanced_accuracy": 0.958,
+   "cohen_kappa": 0.9523,
+   "mcc": 0.9527,
+   "escalation": {
+    "tp": 163,
+    "fn": 0,
+    "fp": 0,
+    "tn": 837,
+    "recall": 1.0,
+    "precision": 1.0,
+    "specificity": 1.0,
+    "f1": 1.0,
+    "f2": 1.0
+   },
+   "confidence": {
+    "ece": 0.0754,
+    "mce": 0.66,
+    "brier": 0.0662,
+    "auroc": 0.7339,
+    "accuracy_top80": 0.9812,
+    "reliability": [
+     {
+      "bin": "0.1-0.2",
+      "n": 50,
+      "confidence": 0.2,
+      "accuracy": 0.86
+     },
+     {
+      "bin": "0.3-0.4",
+      "n": 2,
+      "confidence": 0.4,
+      "accuracy": 0.0
+     },
+     {
+      "bin": "0.6-0.7",
+      "n": 192,
+      "confidence": 0.7,
+      "accuracy": 0.885
+     },
+     {
+      "bin": "0.8-0.9",
+      "n": 9,
+      "confidence": 0.84,
+      "accuracy": 0.889
+     },
+     {
+      "bin": "0.9-1.0",
+      "n": 747,
+      "confidence": 0.978,
+      "accuracy": 0.985
+     }
+    ]
+   },
+   "latency_ms": {
+    "p50": 5.93,
+    "p95": 9.96,
+    "p99": 12.41,
+    "max": 15.23
+   },
+   "decision_paths": {
+    "model": 532,
+    "C5": 192,
+    "C1": 143,
+    "C3": 56,
+    "C6": 50,
+    "C4": 25,
+    "weak": 2
+   },
+   "c6_max_confidence": 0.2,
+   "title": "C. Trained on hand-written sentences only",
+   "note": "No ticket from the file is used for training."
+  }
+ },
+ "noise_on_B": {
+  "5%": {
+   "macro_f1": 0.8879,
+   "escalation_recall": 0.9877,
+   "false_escalations": 0
+  },
+  "10%": {
+   "macro_f1": 0.7964,
+   "escalation_recall": 0.8896,
+   "false_escalations": 0
+  },
+  "15%": {
+   "macro_f1": 0.6882,
+   "escalation_recall": 0.7853,
+   "false_escalations": 0
+  }
+ },
+ "gates": {
+  "safety_recall": {
+   "pass": true,
+   "value": 1.0,
+   "limit": "== 1.0"
+  },
+  "false_escalation": {
+   "pass": true,
+   "value": 1.0,
+   "limit": ">= 0.99"
+  },
+  "c6_confidence": {
+   "pass": true,
+   "value": 0.2,
+   "limit": "<= 0.299"
+  },
+  "macro_f1_seen": {
+   "pass": true,
+   "value": 0.992,
+   "limit": ">= 0.97"
+  },
+  "macro_f1_unseen": {
+   "pass": true,
+   "value": 0.9743,
+   "limit": ">= 0.94"
+  },
+  "macro_f1_seed_only": {
+   "pass": true,
+   "value": 0.9587,
+   "limit": ">= 0.88"
+  },
+  "two_symptom_accuracy": {
+   "pass": true,
+   "value": 0.9924,
+   "limit": ">= 0.95"
+  },
+  "calibration_ece": {
+   "pass": true,
+   "value": 0.085,
+   "limit": "<= 0.12"
+  },
+  "confidence_auroc": {
+   "pass": true,
+   "value": 0.6754,
+   "limit": ">= 0.65"
+  },
+  "noise_5pct_macro_f1": {
+   "pass": true,
+   "value": 0.8879,
+   "limit": ">= 0.84"
+  },
+  "noise_5pct_escalation_recall": {
+   "pass": true,
+   "value": 0.9877,
+   "limit": ">= 0.95"
+  },
+  "latency_p95_ms": {
+   "pass": true,
+   "value": 10.57,
+   "limit": "<= 100"
+  },
+  "train_seconds": {
+   "pass": true,
+   "value": 25.45,
+   "limit": "<= 300"
+  }
+ },
+ "all_gates_pass": true,
+ "generalisation_gap": {
+  "A_minus_B": 0.0177,
+  "B_minus_C": 0.0156
+ }
+}

@@ -1,0 +1,13 @@
+ticket_id,product_category,complaint_text,product_age_days
+S-01,washing_machine,"machine fills with water then just sits there, drum never turns, display shows E21",410
+S-02,oven_or_cooktop,"There was a burning smell and a spark from the back when I switched it on, it is off now",95
+S-03,refrigerator,"delivered yesterday, the doors are not level and one does not close properly",1
+S-04,water_heater,Water is not hot enough for a shower. I can smell gas whenever the geyser is on.,800
+S-05,dishwasher,Display shows E21,120
+S-06,refrigerator,"Thanks for the quick service, the technician was very polite!",60
+S-07,washing_machine,The washer makes a loud banging noise when running. Also it is completely dead now and will not switch on.,900
+S-08,air_conditioner,Water is dripping from the indoor unit onto the wall.,
+S-09,microwave,"PLS HELP smkoe started comming out of the microwve, switched it off imediately",300
+S-10,refrigerator,"fridge thanda nahi ho raha hai, sab khana kharab ho gaya",1500
+S-11,dishwasher,"Water does not drain, the filter looks blocked and dirty water stays at the bottom.",700
+S-12,oven_or_cooktop,"The oven door will not close fully, the hinge is bent.",1100

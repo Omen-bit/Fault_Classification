@@ -1,0 +1,1511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fault Classification</title>
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #1a1a1a;
+  --graphite: #1B1F24;
+  --border: rgba(255,255,255,.14);
+  --accent: #ff6b35;
+  --accent-soft: rgba(255,107,53,.15);
+  --on-accent: #0a0a0a;
+  --danger: #ff4d4f;
+  --danger-soft: rgba(255,77,79,.15);
+  --ok: #3ecf8e;
+  --ok-soft: rgba(62,207,142,.14);
+  --text: #ffffff;
+  --text-body: #d0d0d0;
+  --text-muted: rgba(255,255,255,.68);
+  --font-sans: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "SF Mono", Consolas, "Courier New", monospace;
+}
+* { box-sizing: border-box; }
+html { color-scheme: dark; }
+body { margin: 0; background: var(--bg); color: var(--text-body); font-family: var(--font-sans); font-size: 1rem; line-height: 1.5; }
+h1, h2, h3 { color: var(--text); font-weight: 600; line-height: 1.25; margin: 0; }
+h1 { font-size: 1.125rem; } h2 { font-size: 1.25rem; } h3 { font-size: 1rem; }
+p { margin: 0; }
+.mono { font-family: var(--font-mono); }
+.muted { color: var(--text-muted); }
+.small { font-size: .875rem; }
+.tiny { font-size: .75rem; }
+
+header { position: sticky; top: 0; z-index: 5; background: rgba(10,10,10,.92); backdrop-filter: blur(6px); border-bottom: 1px solid var(--border); }
+.bar { max-width: 1180px; margin: 0 auto; padding: .75rem 1rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: .625rem; }
+.mark { width: .625rem; height: 1.5rem; background: var(--accent); border-radius: .125rem; }
+nav { display: flex; gap: .25rem; margin-left: auto; }
+.tab { background: none; border: 0; color: var(--text-muted); font: inherit; font-weight: 500; padding: .5rem .75rem; border-radius: .25rem; cursor: pointer; border-bottom: 2px solid transparent; transition: color .2s, background .2s; }
+.tab:hover { color: var(--text); background: rgba(255,255,255,.06); }
+.tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+.status { display: flex; align-items: center; gap: .5rem; font-family: var(--font-mono); font-size: .75rem; color: var(--text-muted); }
+.dot { width: .5rem; height: .5rem; border-radius: 50%; background: #808080; }
+.dot.ok { background: var(--ok); } .dot.bad { background: var(--danger); } .dot.wait { background: #ffb020; }
+.notice { max-width: 1180px; margin: .75rem auto 0; padding: .625rem 1rem; border: 1px solid #ffb020; background: rgba(255,176,32,.12); color: var(--text); border-radius: .375rem; font-size: .875rem; }
+.notice.bad { border-color: var(--danger); background: var(--danger-soft); }
+.notice[hidden] { display: none; }
+
+main { max-width: 1180px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+.view[hidden] { display: none; }
+.intro { margin-bottom: 1.25rem; max-width: 46rem; }
+.grid2 { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 1.25rem; align-items: start; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: .5rem; padding: 1.25rem; }
+.card + .card { margin-top: 1.25rem; }
+.card > h2 { margin-bottom: 1rem; }
+label { display: block; font-size: .875rem; color: var(--text); font-weight: 500; margin-bottom: .375rem; }
+input, select, textarea { width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: .25rem; padding: .625rem .75rem; font: inherit; }
+textarea { min-height: 9rem; resize: vertical; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.field { margin-bottom: .875rem; }
+.hint { display: flex; justify-content: space-between; font-size: .75rem; color: var(--text-muted); margin-top: .25rem; }
+.hint .warn { color: #ffb020; }
+.btn { background: var(--accent); color: var(--on-accent); border: 0; border-radius: .25rem; padding: .625rem 1.125rem; font: inherit; font-weight: 600; cursor: pointer; transition: filter .2s; }
+.btn:hover { filter: brightness(1.1); } .btn:disabled { opacity: .55; cursor: progress; }
+.btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); font-weight: 500; }
+.btn.ghost:hover { background: rgba(255,255,255,.06); filter: none; }
+.actions { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .5rem; }
+.chip { background: var(--graphite); color: var(--text-body); border: 1px solid var(--border); border-radius: 1rem; padding: .25rem .75rem; font: inherit; font-size: .8125rem; cursor: pointer; transition: border-color .2s, color .2s; }
+.chip:hover { border-color: var(--accent); color: var(--text); }
+
+.banner { display: flex; gap: .75rem; align-items: center; background: var(--danger-soft); border: 1px solid var(--danger); color: var(--text); border-radius: .375rem; padding: .75rem 1rem; margin-bottom: 1rem; font-weight: 600; }
+.banner svg { flex: none; }
+.calm { display: flex; gap: .5rem; align-items: center; color: var(--text-muted); font-size: .875rem; margin-bottom: 1rem; }
+.cat { font-family: var(--font-mono); font-size: 1.5rem; color: var(--text); font-weight: 600; word-break: break-word; }
+.kv { display: grid; grid-template-columns: 8.5rem 1fr; gap: .5rem 1rem; margin-top: 1rem; align-items: center; }
+.kv dt { color: var(--text-muted); font-size: .875rem; } .kv dd { margin: 0; }
+.meter { height: .5rem; background: var(--graphite); border-radius: .25rem; overflow: hidden; }
+.meter > i { display: block; height: 100%; background: var(--accent); border-radius: .25rem; transition: width .4s ease; }
+.reason { background: var(--graphite); border-left: 3px solid var(--accent); padding: .75rem 1rem; border-radius: 0 .25rem .25rem 0; margin-top: 1rem; color: var(--text); }
+.rules { list-style: none; margin: .75rem 0 0; padding: 0; display: grid; gap: .375rem; }
+.rules li { display: grid; grid-template-columns: 2.5rem 1fr auto; gap: .75rem; align-items: center; padding: .5rem .75rem; border: 1px solid var(--border); border-radius: .25rem; font-size: .875rem; }
+.rules li.on { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+.rules li.on.danger { border-color: var(--danger); background: var(--danger-soft); }
+.tag { font-family: var(--font-mono); font-size: .75rem; padding: .125rem .5rem; border-radius: .25rem; border: 1px solid var(--border); color: var(--text-muted); white-space: nowrap; }
+.tag.on { color: var(--on-accent); background: var(--accent); border-color: var(--accent); font-weight: 600; }
+.tag.red { color: #fff; background: var(--danger); border-color: var(--danger); font-weight: 600; }
+.tag.green { color: var(--ok); border-color: var(--ok); }
+details { margin-top: 1rem; } summary { cursor: pointer; color: var(--text-muted); font-size: .875rem; }
+pre { background: var(--bg); border: 1px solid var(--border); border-radius: .25rem; padding: .75rem; overflow: auto; font-family: var(--font-mono); font-size: .8125rem; color: var(--text-body); margin: .5rem 0 0; white-space: pre-wrap; word-break: break-word; }
+.empty { color: var(--text-muted); padding: 2rem 0; text-align: center; }
+.error { background: var(--danger-soft); border: 1px solid var(--danger); border-radius: .375rem; padding: .75rem 1rem; color: var(--text); }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .75rem; margin-bottom: 1.25rem; }
+.tile { background: var(--surface); border: 1px solid var(--border); border-radius: .5rem; padding: 1rem; }
+.tile b { display: block; font-family: var(--font-mono); font-size: 1.75rem; color: var(--text); font-weight: 600; line-height: 1.2; }
+.tile span { font-size: .8125rem; color: var(--text-muted); }
+.drop { border: 1.5px dashed var(--border); border-radius: .5rem; padding: 1.5rem; text-align: center; transition: border-color .2s, background .2s; }
+.drop.over { border-color: var(--accent); background: var(--accent-soft); }
+progress { width: 100%; height: .5rem; accent-color: var(--accent); }
+.scroll { overflow: auto; max-height: 30rem; border: 1px solid var(--border); border-radius: .375rem; }
+table { border-collapse: collapse; width: 100%; font-size: .8125rem; }
+th, td { text-align: left; padding: .5rem .625rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { position: sticky; top: 0; background: var(--graphite); color: var(--text); font-weight: 500; white-space: nowrap; }
+td.num, th.num { text-align: right; font-family: var(--font-mono); }
+tr.esc td { background: rgba(255,77,79,.06); }
+.bars { display: grid; gap: .375rem; }
+.barrow { display: grid; grid-template-columns: 14.5rem 1fr 3.5rem; gap: .625rem; align-items: center; font-size: .8125rem; }
+.barrow .meter > i { transition: none; }
+.cm td, .cm th { text-align: center; padding: .25rem; font-family: var(--font-mono); font-size: .6875rem; border: 1px solid var(--bg); min-width: 1.75rem; }
+.cm th { position: static; background: none; color: var(--text-muted); font-weight: 400; }
+.flow { width: 100%; height: auto; display: block; }
+.note { border-left: 3px solid var(--border); padding-left: .875rem; color: var(--text-muted); font-size: .875rem; }
+footer { max-width: 1180px; margin: 0 auto; padding: 1rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: .75rem; font-family: var(--font-mono); }
+.stepper { position: sticky; top: 4rem; z-index: 4; display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; background: var(--graphite); border: 1px solid var(--border); border-radius: .5rem; padding: .625rem .875rem; margin: 1.25rem 0; }
+.stage { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: .5rem; padding: 1.125rem 1.25rem; margin-top: 1rem; animation: rise .35s ease; }
+.stage[hidden] { display: none; }
+.stage > header { position: static; background: none; border: 0; backdrop-filter: none; display: flex; gap: .75rem; align-items: baseline; margin-bottom: .25rem; }
+.stage .n { font-family: var(--font-mono); color: var(--on-accent); background: var(--accent); border-radius: .25rem; padding: 0 .5rem; font-weight: 600; font-size: .875rem; }
+.stage .what { color: var(--text-muted); font-size: .875rem; margin-bottom: .875rem; }
+.sent { border: 1px solid var(--border); border-radius: .375rem; padding: .75rem; margin-top: .625rem; }
+.sent.frag { margin-left: 1.5rem; border-style: dashed; }
+.sent q { color: var(--text); quotes: none; font-family: var(--font-mono); font-size: .875rem; }
+.tag.amber { color: #ffb020; border-color: #ffb020; }
+.rungs { list-style: none; margin: 0; padding: 0; display: grid; gap: .375rem; }
+.rungs li { display: grid; grid-template-columns: 4.5rem 1fr auto; gap: .75rem; align-items: center; padding: .5rem .75rem; border: 1px solid var(--border); border-radius: .25rem; font-size: .875rem; }
+.rungs li.fired { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+.rungs li.skip { opacity: .45; }
+.arrowline { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; font-family: var(--font-mono); }
+.arrowline b { color: var(--text); font-size: 1.25rem; }
+@keyframes rise { from { opacity: 0; transform: translateY(.5rem); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .stage { animation: none; } }
+.steps { list-style: none; display: flex; gap: .5rem; flex-wrap: wrap; padding: 0; margin: 0 0 1.25rem; }
+.steps li { display: flex; align-items: center; gap: .5rem; padding: .375rem .875rem .375rem .375rem; border: 1px solid var(--border); border-radius: 2rem; color: var(--text-muted); font-size: .875rem; }
+.steps li span { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--graphite); font-size: .75rem; }
+.steps li.now { color: var(--text); border-color: var(--accent); } .steps li.now span { background: var(--accent); color: var(--on-accent); font-weight: 600; }
+.steps li.done { color: var(--text-body); } .steps li.done span { background: var(--ok-soft); color: var(--ok); }
+.drop { display: grid; justify-items: center; gap: .625rem; padding: 2rem 1.5rem; }
+.drop input[type=file] { max-width: 22rem; }
+.droplabel { font-size: 1.0625rem; margin: 0; }
+.meter.big { height: .75rem; } .meter.big > i { transition: width .2s linear; }
+.toolbar { display: grid; grid-template-columns: minmax(12rem, 1fr) auto auto; gap: .625rem; margin-bottom: .75rem; }
+.toolbar select { width: auto; }
+table.rows tbody tr[role=button] { cursor: pointer; transition: background .15s; }
+table.rows tbody tr[role=button]:hover, table.rows tbody tr.open { background: rgba(255,255,255,.05); }
+table.rows td { vertical-align: middle; }
+table.rows tr.detail td { background: var(--graphite); padding: 1rem 1.25rem; }
+.verdict { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; padding: .75rem 1rem; border-radius: .5rem; border: 1px solid var(--border); margin-bottom: 1.25rem; color: var(--text); }
+.verdict.good { border-color: var(--ok); background: var(--ok-soft); } .verdict.bad { border-color: var(--danger); background: var(--danger-soft); }
+.subnav { position: sticky; top: 3.75rem; z-index: 3; display: flex; gap: .375rem; flex-wrap: wrap; background: rgba(10,10,10,.94); padding: .5rem 0; margin: 0 0 1rem; border-bottom: 1px solid var(--border); }
+.subnav a { color: var(--text-muted); text-decoration: none; font-size: .8125rem; padding: .25rem .75rem; border: 1px solid var(--border); border-radius: 1rem; transition: color .2s, border-color .2s; }
+.subnav a:hover, .subnav a:focus-visible { color: var(--text); border-color: var(--accent); }
+.card[id^="ev-s-"] { scroll-margin-top: 7.5rem; }
+.card > .what { color: var(--text-muted); font-size: .875rem; margin: -.5rem 0 1rem; max-width: 46rem; }
+.bigstat b { display: block; font-family: var(--font-mono); font-size: 3rem; line-height: 1.1; color: var(--ok); font-weight: 600; }
+.bigstat span { color: var(--text-muted); font-size: .875rem; }
+.bars.wide .barrow { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 4.5rem; }
+.bars.wide .barrow > span:first-child { white-space: normal; overflow-wrap: anywhere; }
+.barrow > * { min-width: 0; } .barrow > span:first-child { overflow: hidden; text-overflow: ellipsis; }
+.bars.wide .barrow > span:first-child { overflow: visible; }
+.gates { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: .75rem; }
+.gate { border: 1px solid var(--border); border-left: 3px solid var(--ok); border-radius: .375rem; padding: .75rem .875rem; background: var(--bg); }
+.gate.fail { border-left-color: var(--danger); }
+details > summary { margin-top: .75rem; }
+.rail { display: flex; gap: .25rem; flex-wrap: wrap; flex-basis: 100%; }
+.railstep { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); border-radius: .25rem; padding: .25rem .5rem; font: inherit; font-size: .75rem; cursor: pointer; transition: border-color .2s, color .2s, background .2s; }
+.railstep:hover { color: var(--text); border-color: var(--accent); }
+.railstep.done { color: var(--text); border-color: rgba(255,107,53,.5); }
+.railstep.now { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 600; }
+.marked { font-family: var(--font-mono); font-size: .9375rem; line-height: 2; color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: .375rem; padding: .75rem 1rem; white-space: pre-wrap; word-break: break-word; margin: 0; }
+.marked .dim { color: rgba(255,255,255,.42); }
+.marked .sym { border-bottom: 3px solid; padding-bottom: 1px; }
+.marked mark.hot { background: var(--danger); color: #fff; border-radius: .2rem; padding: 0 .2rem; }
+.marked mark.code { background: transparent; color: var(--text); outline: 1px solid var(--text-muted); border-radius: .2rem; padding: 0 .2rem; }
+.legend { display: flex; flex-wrap: wrap; gap: .375rem 1rem; margin-top: .625rem; font-size: .8125rem; color: var(--text-muted); font-family: var(--font-mono); }
+.legend .key { display: inline-flex; align-items: center; gap: .375rem; }
+.legend .key i { width: .875rem; height: .375rem; border-radius: .125rem; display: inline-block; }
+.diff { margin-top: .875rem; padding: .5rem .75rem; border-radius: .25rem; border: 1px solid var(--border); font-size: .875rem; }
+.diff.changed { border-color: var(--accent); background: var(--accent-soft); color: var(--text); }
+@media (max-width: 860px) { .stepper { position: static; } .subnav { position: static; } .toolbar { grid-template-columns: 1fr; } .toolbar select { width: 100%; } .grid2 { grid-template-columns: minmax(0, 1fr); } .barrow { grid-template-columns: 9rem 1fr 3rem; } .kv { grid-template-columns: 6.5rem 1fr; } }
+@media (max-width: 640px) {
+  .bar { padding: .5rem .75rem; gap: .25rem .75rem; }
+  .brand h1 { font-size: 1rem; white-space: nowrap; } .brand h1 span { display: none; }
+  .status { margin-left: auto; } #health-text { display: none; }
+  nav { order: 3; flex-basis: 100%; margin-left: 0; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+  nav::-webkit-scrollbar { display: none; }
+  .tab { white-space: nowrap; padding: .375rem .625rem; font-size: .875rem; flex: none; }
+  main { padding: 1rem .75rem 2.5rem; } .card { padding: 1rem; }
+  .notice { margin: .5rem .75rem 0; }
+  .subnav { top: 0; } .steps li { font-size: .8125rem; }
+  .row { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* ===================== design system (shape, colour roles, depth, type) ===================== */
+:root {
+  --r-lg: 1rem; --r-md: .75rem; --r-sm: .5rem; --r-pill: 999px;
+  --surface: #141417; --surface-2: #1b1b20; --graphite: #20242b;
+  --border: rgba(255,255,255,.09); --border-strong: rgba(255,255,255,.16);
+  --info: #5b9dff; --info-soft: rgba(91,157,255,.14);          /* information, the model's own decisions */
+  --violet: #a78bfa; --violet-soft: rgba(167,139,250,.15);      /* business rules other than safety */
+  --warn: #ffb020; --warn-soft: rgba(255,176,32,.14);           /* warning, low confidence */
+  --shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 18px 40px -24px rgba(0,0,0,.95);
+  --gap: 1.25rem;
+}
+body { background: radial-gradient(60rem 28rem at 12% -8%, rgba(255,107,53,.10), transparent 60%), radial-gradient(52rem 26rem at 96% -10%, rgba(91,157,255,.08), transparent 62%), var(--bg); background-attachment: fixed; -webkit-font-smoothing: antialiased; }
+h2 { font-size: 1.125rem; letter-spacing: -.01em; } h3 { font-size: .9375rem; color: var(--text-body); font-weight: 600; }
+.mono { font-variant-numeric: tabular-nums; }
+
+/* header */
+header { background: rgba(10,10,10,.82); backdrop-filter: blur(14px) saturate(140%); }
+.bar { padding: .625rem 1rem; }
+.mark { width: 1.75rem; height: 1.75rem; border-radius: .5rem; background: linear-gradient(135deg, #ff8a5c, #ff6b35 55%, #d9481a); box-shadow: 0 6px 16px -6px rgba(255,107,53,.8); display: grid; place-items: center; }
+.mark::after { content: ""; width: .5rem; height: .5rem; border-radius: 50%; background: #0a0a0a; }
+.brand h1 { font-size: 1.0625rem; letter-spacing: -.01em; } .brand h1 span { font-weight: 400; margin-left: .25rem; }
+nav { background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: var(--r-pill); padding: .25rem; gap: .125rem; }
+.tab { border-radius: var(--r-pill); border-bottom: 0; padding: .4375rem .9375rem; font-size: .9375rem; }
+.tab[aria-selected="true"] { background: var(--accent); color: var(--on-accent); font-weight: 600; box-shadow: 0 6px 16px -8px rgba(255,107,53,.9); }
+.tab[aria-selected="true"]:hover { background: var(--accent); color: var(--on-accent); }
+.status { background: rgba(255,255,255,.05); border: 1px solid var(--border); border-radius: var(--r-pill); padding: .3125rem .75rem; }
+.dot.ok { box-shadow: 0 0 0 3px var(--ok-soft); } .dot.bad { box-shadow: 0 0 0 3px var(--danger-soft); }
+
+/* surfaces */
+main { padding: 1.75rem 1rem 3.5rem; }
+.intro { font-size: 1.0625rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+.card { background: linear-gradient(180deg, var(--surface-2), var(--surface)); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.5rem; box-shadow: var(--shadow); }
+.card + .card { margin-top: var(--gap); } .grid2 { gap: var(--gap); }
+.grid2 > .card + .card { margin-top: 0; } .grid2 + .card, .card + .grid2, .kpis + .card { margin-top: var(--gap); }
+#bulk-tiles, #ev-tiles { grid-template-columns: repeat(6, minmax(0, 1fr)); } #bulk-tiles .tile b, #ev-tiles .tile b { font-size: 1.5rem; }
+.tiles.three { grid-template-columns: repeat(3, minmax(0, 1fr)); } .tiles.three .tile { padding: .875rem 1rem; } .tiles.three .tile b { font-size: 1.5rem; } .grid2.stretch { align-items: stretch; }
+.card > h2 { margin-bottom: 1rem; display: flex; align-items: baseline; gap: .5rem; flex-wrap: wrap; }
+.card > .what { margin-top: -.625rem; }
+.tile { background: linear-gradient(180deg, var(--surface-2), var(--surface)); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: 1.125rem 1.25rem; }
+.tile b { font-family: var(--font-sans); font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: -.02em; font-size: 1.875rem; }
+.tiles { grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr)); gap: .875rem; margin-bottom: var(--gap); }
+
+/* controls */
+input, select, textarea { border-radius: var(--r-md); padding: .6875rem .875rem; background: #0d0d10; border-color: var(--border-strong); transition: border-color .2s, box-shadow .2s; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+label { margin-bottom: .4375rem; }
+.btn { border-radius: var(--r-md); padding: .6875rem 1.25rem; background: linear-gradient(180deg, #ff7d4d, #ff6b35); box-shadow: 0 10px 22px -12px rgba(255,107,53,.9); transition: transform .15s, filter .2s; }
+.btn:hover { transform: translateY(-1px); } .btn:active { transform: none; }
+.btn.ghost { background: rgba(255,255,255,.04); border-color: var(--border-strong); box-shadow: none; }
+.chip { border-radius: var(--r-pill); padding: .375rem .875rem; background: rgba(255,255,255,.04); }
+.chip:hover { background: var(--accent-soft); }
+.tag { border-radius: var(--r-pill); padding: .1875rem .625rem; font-family: var(--font-sans); font-weight: 500; }
+.tag.amber { background: var(--warn-soft); } .tag.green { background: var(--ok-soft); }
+.tag.blue { color: var(--info); border-color: var(--info); background: var(--info-soft); }
+.tag.violet { color: var(--violet); border-color: var(--violet); background: var(--violet-soft); }
+input[type=file] { padding: .375rem; border-style: dashed; cursor: pointer; }
+input[type=file]::file-selector-button { font: inherit; font-weight: 600; color: var(--on-accent); background: var(--accent); border: 0; border-radius: var(--r-sm); padding: .5rem .875rem; margin-right: .75rem; cursor: pointer; }
+
+/* data display */
+.meter { height: .5rem; border-radius: var(--r-pill); background: rgba(255,255,255,.07); }
+.meter > i { border-radius: var(--r-pill); background: linear-gradient(90deg, #ff8a5c, #ff6b35); }
+.banner { border-radius: var(--r-md); padding: .875rem 1.125rem; }
+.reason { border-radius: var(--r-md); border-left: 0; background: var(--graphite); padding: .875rem 1.125rem; position: relative; }
+pre { border-radius: var(--r-md); background: #0b0b0e; }
+.scroll { border-radius: var(--r-md); } th { background: var(--graphite); font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); }
+td { border-bottom-color: rgba(255,255,255,.06); } tbody tr:last-child td { border-bottom: 0; }
+.sent, .rungs li, .gate, .drop, .verdict, .diff, .marked, .notice, .error { border-radius: var(--r-md); }
+.drop { background: rgba(255,255,255,.02); }
+.subnav a, .railstep { border-radius: var(--r-pill); }
+.railstep { padding: .375rem .75rem; font-size: .8125rem; }
+.steps li { background: rgba(255,255,255,.03); }
+.gate { border-left-width: 1px; border-top: 3px solid var(--ok); background: rgba(255,255,255,.02); } .gate.fail { border-top-color: var(--danger); }
+.gate.key { background: var(--ok-soft); } .gate.key.fail { background: var(--danger-soft); }
+.stage { border-radius: var(--r-lg); border: 1px solid var(--border); background: linear-gradient(180deg, var(--surface-2), var(--surface)); box-shadow: var(--shadow); padding: 1.25rem 1.5rem; }
+.stage .n { border-radius: var(--r-sm); padding: .0625rem .5625rem; }
+.stage[data-kind=safety] .n { background: var(--danger); color: #fff; }
+.stage[data-kind=model] .n { background: var(--info); color: #06121f; }
+.stage[data-kind=rules] .n { background: var(--violet); color: #150b2e; }
+.stage[data-kind=answer] .n { background: var(--ok); color: #04130c; }
+.stepper { border-radius: var(--r-lg); padding: .875rem 1rem; box-shadow: var(--shadow); }
+.barrow > span:first-child { font-family: var(--font-sans); color: var(--text-body); }
+.barrow { grid-template-columns: 12.5rem 1fr 4rem; }
+
+/* result card on Classify */
+.answer { display: flex; align-items: center; gap: .875rem; margin: .25rem 0 1rem; }
+.answer .swatch { width: .875rem; height: .875rem; border-radius: 50%; flex: none; align-self: center; }
+.answer .name { font-size: 1.625rem; font-weight: 700; color: var(--text); letter-spacing: -.02em; line-height: 1.15; }
+.answer .id { font-family: var(--font-mono); font-size: .8125rem; color: var(--text-muted); }
+.confbox { display: grid; grid-template-columns: auto 1fr auto; gap: .875rem; align-items: center; background: rgba(255,255,255,.03); border: 1px solid var(--border); border-radius: var(--r-md); padding: .75rem 1rem; }
+.confbox b { font-size: 1.25rem; color: var(--text); font-variant-numeric: tabular-nums; }
+.decided { display: grid; gap: .5rem; margin-top: .625rem; }
+.rulecard { display: grid; grid-template-columns: auto 1fr; gap: .875rem; align-items: start; border: 1px solid var(--violet); background: var(--violet-soft); border-radius: var(--r-md); padding: .75rem 1rem; }
+.rulecard.safety { border-color: var(--danger); background: var(--danger-soft); }
+.rulecard.model { border-color: var(--info); background: var(--info-soft); }
+.rulecard .badge { font-family: var(--font-mono); font-weight: 600; font-size: .8125rem; color: #150b2e; background: var(--violet); border-radius: var(--r-sm); padding: .1875rem .5rem; }
+.rulecard.safety .badge { background: var(--danger); color: #fff; } .rulecard.model .badge { background: var(--info); color: #06121f; }
+.rulecard b { color: var(--text); display: block; } .rulecard span.t { font-size: .875rem; color: var(--text-body); }
+.metaline { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 1rem; font-size: .8125rem; color: var(--text-muted); }
+.metaline b { color: var(--text-body); font-weight: 500; font-family: var(--font-mono); }
+
+/* pipeline diagram on How it works */
+.pipe { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.3fr) auto minmax(0, 1.3fr) auto minmax(0, 1fr); gap: .75rem; align-items: center; }
+.pstack { display: grid; gap: .625rem; }
+.pnode { position: relative; border: 1px solid var(--border-strong); border-radius: var(--r-md); background: rgba(255,255,255,.03); padding: .875rem 1rem .875rem 2.75rem; }
+.pnode b { display: block; color: var(--text); font-size: .9375rem; } .pnode > span:last-child { display: block; font-size: .8125rem; color: var(--text-muted); margin-top: .125rem; line-height: 1.4; }
+.pnode .pstep { position: absolute; left: .75rem; top: .875rem; width: 1.375rem; height: 1.375rem; border-radius: 50%; display: grid; place-items: center; font-size: .75rem; font-weight: 700; background: var(--text-muted); color: #0a0a0a; }
+.pnode.safety { border-color: var(--danger); background: var(--danger-soft); } .pnode.safety .pstep { background: var(--danger); color: #fff; }
+.pnode.model { border-color: var(--info); background: var(--info-soft); } .pnode.model .pstep { background: var(--info); color: #06121f; }
+.pnode.rules { border-color: var(--violet); background: var(--violet-soft); } .pnode.rules .pstep { background: var(--violet); color: #150b2e; }
+.pnode.out { border-color: var(--ok); background: var(--ok-soft); } .pnode.out .pstep { background: var(--ok); color: #04130c; }
+.parrow { color: var(--text-muted); display: grid; place-items: center; }
+@media (max-width: 960px) { .pipe { grid-template-columns: 1fr; } .parrow { transform: rotate(90deg); } }
+
+/* dashboard */
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .875rem; margin-bottom: var(--gap); }
+.kpi { position: relative; overflow: hidden; background: linear-gradient(180deg, var(--surface-2), var(--surface)); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.125rem 1.25rem .375rem; box-shadow: var(--shadow); }
+.kpi .cap { font-size: .8125rem; color: var(--text-muted); display: flex; align-items: center; gap: .5rem; }
+.kpi .cap i { width: .5rem; height: .5rem; border-radius: 50%; background: var(--k, var(--accent)); }
+.kpi b { display: block; font-size: 2.125rem; font-weight: 700; letter-spacing: -.03em; color: var(--text); font-variant-numeric: tabular-nums; line-height: 1.2; margin-top: .25rem; }
+.kpi .sub { font-size: .75rem; color: var(--text-muted); }
+.kpi svg { display: block; width: 100%; height: 2.75rem; margin-top: .75rem; }
+.kpi .axis { display: flex; justify-content: space-between; font-size: .6875rem; color: var(--text-muted); padding: .25rem 0 .375rem; }
+.donutwrap { display: grid; grid-template-columns: minmax(9rem, 12rem) 1fr; gap: 1.25rem; align-items: center; }
+.donutwrap svg { width: 100%; height: auto; }
+.keys { display: grid; gap: .375rem; font-size: .8125rem; }
+.keys div { display: grid; grid-template-columns: .75rem 1fr auto auto; gap: .5rem; align-items: center; }
+.keys i { width: .75rem; height: .75rem; border-radius: .25rem; } .keys .v { color: var(--text); font-variant-numeric: tabular-nums; font-weight: 600; } .keys .p { color: var(--text-muted); font-variant-numeric: tabular-nums; min-width: 3rem; text-align: right; }
+table.heat { border-collapse: separate; border-spacing: 3px; font-size: .75rem; }
+table.heat th { position: static; background: none; text-transform: none; letter-spacing: 0; font-weight: 500; padding: .25rem .375rem; border: 0; white-space: nowrap; color: var(--text-muted); }
+table.heat th.rowh { text-align: right; color: var(--text-body); }
+table.heat td { border: 0; border-radius: .375rem; text-align: center; min-width: 3rem; height: 2.125rem; padding: 0; color: #fff; font-variant-numeric: tabular-nums; font-weight: 600; background: rgba(255,255,255,.035); }
+.recent { list-style: none; margin: 0; padding: 0; display: grid; gap: .375rem; }
+.recent li { display: grid; grid-template-columns: auto 1fr auto; gap: .75rem; align-items: center; padding: .5rem .75rem; border: 1px solid var(--border); border-radius: var(--r-md); font-size: .875rem; background: rgba(255,255,255,.02); }
+.legendline { display: flex; gap: 1.25rem; flex-wrap: wrap; font-size: .8125rem; color: var(--text-muted); margin-top: .5rem; }
+.legendline span { display: inline-flex; align-items: center; gap: .375rem; } .legendline i { width: .75rem; height: .75rem; border-radius: .25rem; }
+.quality { display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: .8125rem; color: var(--text-muted); margin-top: 1rem; padding-top: .875rem; border-top: 1px solid var(--border); }
+.quality b { color: var(--text-body); font-weight: 600; font-variant-numeric: tabular-nums; }
+@media (max-width: 1000px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } #bulk-tiles, #ev-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 860px) { .barrow { grid-template-columns: 9rem 1fr 3.25rem; } .donutwrap { grid-template-columns: 1fr; } .donutwrap svg { max-width: 12rem; margin: 0 auto; } }
+@media (max-width: 640px) { #bulk-tiles, #ev-tiles, .tiles.three { grid-template-columns: repeat(2, minmax(0, 1fr)); } nav { border-radius: var(--r-md); } .kpis { grid-template-columns: 1fr 1fr; } .kpi b { font-size: 1.5rem; } .card { padding: 1.125rem; } .answer .name { font-size: 1.375rem; } }
+/* no coloured strips on the left edge of any card: colour is carried by badges, dots and tints */
+.note { border-left: 0; padding: .625rem .875rem; border-radius: var(--r-md); background: rgba(255,255,255,.03); }
+.gate, .gate.fail { border-left: 1px solid var(--border); }
+@media (prefers-reduced-motion: reduce) { .btn:hover { transform: none; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand"><span class="mark" aria-hidden="true"></span><h1>Fault Classification <span class="muted small">Use case 1</span></h1></div>
+    <nav role="tablist" aria-label="Views">
+      <button class="tab" role="tab" id="tab-classify" data-view="classify" aria-controls="view-classify" aria-selected="true">Classify</button>
+      <button class="tab" role="tab" id="tab-bulk" data-view="bulk" aria-controls="view-bulk" aria-selected="false">Bulk upload</button>
+      <button class="tab" role="tab" id="tab-how" data-view="how" aria-controls="view-how" aria-selected="false">How it works</button>
+      <button class="tab" role="tab" id="tab-evals" data-view="evals" aria-controls="view-evals" aria-selected="false">Evals</button>
+      <button class="tab" role="tab" id="tab-dashboard" data-view="dashboard" aria-controls="view-dashboard" aria-selected="false">Dashboard</button>
+    </nav>
+    <div class="status" title="GET /health"><span class="dot" id="health-dot"></span><span id="health-text">Checking</span></div>
+  </div>
+</header>
+
+<div class="notice" id="stale" hidden role="alert">This page is newer than the service that is running. Stop the service and start it again with <span class="mono">python run.py</span>, then reload.</div>
+<div class="notice bad" id="offline" hidden role="alert">The service is not answering. If you stopped it, start it again with <span class="mono">python run.py</span>. This page will reconnect by itself.</div>
+<main>
+  <!-- ============================ CLASSIFY ============================ -->
+  <section class="view" id="view-classify" role="tabpanel" aria-labelledby="tab-classify">
+    <p class="intro">Enter one service complaint. The service returns a fault category, a confidence, whether a person must see the ticket, and the business rule that decided it.</p>
+    <div class="grid2">
+      <form class="card" id="form" novalidate>
+        <h2>Ticket</h2>
+        <div class="row">
+          <div class="field"><label for="ticket_id">Ticket ID</label><input id="ticket_id" name="ticket_id" value="T-manual" autocomplete="off"></div>
+          <div class="field"><label for="product_age_days">Product age in days <span class="muted">(optional)</span></label><input id="product_age_days" name="product_age_days" type="number" min="0" inputmode="numeric" placeholder="Unknown"></div>
+        </div>
+        <div class="field">
+          <label for="product_category">Product category</label>
+          <select id="product_category" name="product_category">
+            <option value="washing_machine">washing_machine</option>
+            <option value="refrigerator">refrigerator</option>
+            <option value="dishwasher">dishwasher</option>
+            <option value="oven_or_cooktop">oven_or_cooktop</option>
+            <option value="air_conditioner">air_conditioner</option>
+            <option value="water_heater">water_heater</option>
+            <option value="microwave">microwave</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="complaint_text">Complaint text</label>
+          <textarea id="complaint_text" name="complaint_text" placeholder="Describe the problem as the customer or agent wrote it"></textarea>
+          <div class="hint"><span>Typos, mixed case and other languages are fine.</span><span id="count" class="mono">0 / 2000</span></div>
+        </div>
+        <div class="actions">
+          <button class="btn" id="submit" type="submit">Classify</button>
+          <span class="tiny muted">Ctrl + Enter</span>
+        </div>
+        <div class="field" style="margin:1.25rem 0 0">
+          <span class="small muted">Try an example</span>
+          <div class="chips" id="examples"></div>
+        </div>
+      </form>
+
+      <div class="card" id="result" aria-live="polite">
+        <h2>Result</h2>
+        <div class="empty" id="result-empty">The category, confidence, escalation flag, reason and the business rules applied will appear here.</div>
+        <div id="result-body" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ BULK ============================ -->
+  <section class="view" id="view-bulk" role="tabpanel" aria-labelledby="tab-bulk" hidden>
+    <p class="intro">Classify a whole file of tickets. Each row is sent to <span class="mono">POST /classify</span> on this machine; nothing leaves it.</p>
+    <ol class="steps" id="bulk-steps">
+      <li class="now"><span class="mono">1</span> Choose a file</li>
+      <li><span class="mono">2</span> Check and classify</li>
+      <li><span class="mono">3</span> Review and export</li>
+    </ol>
+
+    <div class="card">
+      <div class="drop" id="drop">
+        <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0-12 4 4m-4-4-4 4M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" fill="none" stroke="#ff6b35" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <label for="file" class="droplabel">Drop a CSV or JSON file here, or choose one</label>
+        <input id="file" type="file" accept=".csv,.tsv,.txt,.json,.jsonl,application/json,text/csv">
+        <p class="tiny muted">Columns: <span class="mono">ticket_id, product_category, complaint_text, product_age_days</span>. CSV may be separated by commas, semicolons or tabs. JSON may be an array of objects, an object with a <span class="mono">tickets</span> array, or one object per line. Up to 5,000 rows. Add <span class="mono">fault_category</span> and <span class="mono">escalate</span> columns to have the results scored.</p>
+        <button class="btn ghost" id="bulk-sample" type="button">Download a sample CSV</button>
+      </div>
+      <div id="bulk-error" class="error" hidden style="margin-top:1rem"></div>
+    </div>
+
+    <div class="card" id="bulk-file" hidden>
+      <div class="actions" style="justify-content:space-between">
+        <div><h2 id="bulk-name" style="margin:0"></h2><p class="small muted" id="bulk-info"></p></div>
+        <button class="btn" id="bulk-run" disabled>Classify file</button>
+      </div>
+      <div class="grid2" style="margin-top:1rem">
+        <div><h3 style="margin-bottom:.5rem">Columns found</h3><div class="scroll" style="max-height:none"><table id="bulk-map"><thead></thead><tbody></tbody></table></div></div>
+        <div><h3 style="margin-bottom:.5rem">First rows</h3><div id="bulk-preview"></div></div>
+      </div>
+      <div id="bulk-progress" hidden style="margin-top:1.25rem">
+        <div class="meter big"><i id="bulk-bar" style="width:0%"></i></div>
+        <div class="actions tiny muted mono" style="justify-content:space-between;margin-top:.375rem"><span id="bulk-count"></span><span id="bulk-eta"></span></div>
+      </div>
+    </div>
+
+    <div id="bulk-out" hidden>
+      <div class="tiles" id="bulk-tiles" style="margin-top:1.25rem"></div>
+      <div class="banner" id="bulk-alert" hidden><span id="bulk-alert-icon"></span><span id="bulk-alert-text"></span><button class="btn ghost" id="bulk-alert-btn" type="button" style="margin-left:auto">Show only these</button></div>
+      <div class="card" id="bulk-score" hidden><h2>Scored against the labels in the file</h2><div id="bulk-score-body"></div></div>
+      <div class="card"><h2>What the file contains</h2><div class="grid2"><div class="bars" id="bulk-cats"></div><div class="bars" id="bulk-rules"></div></div></div>
+      <div class="card">
+        <div class="actions" style="justify-content:space-between;margin-bottom:.875rem">
+          <h2 style="margin:0">Results</h2>
+          <div class="actions"><button class="btn ghost" id="bulk-csv" type="button">Download CSV</button><button class="btn ghost" id="bulk-json" type="button">Download JSON</button></div>
+        </div>
+        <div class="toolbar">
+          <input id="bulk-search" type="search" placeholder="Search ticket, category, reason or complaint" aria-label="Search results">
+          <select id="bulk-filter" aria-label="Filter results"><option value="all">All rows</option><option value="esc">Escalated only</option><option value="low">Confidence below 0.5</option><option value="wrong">Disagrees with label</option></select>
+          <select id="bulk-sort" aria-label="Sort results"><option value="file">File order</option><option value="esc">Escalated first</option><option value="conf-asc">Lowest confidence first</option><option value="conf-desc">Highest confidence first</option><option value="cat">Category A to Z</option></select>
+        </div>
+        <div class="scroll" style="max-height:38rem"><table id="bulk-table" class="rows"><thead></thead><tbody></tbody></table></div>
+        <div class="actions" style="justify-content:space-between;margin-top:.75rem">
+          <span class="tiny muted" id="bulk-shown"></span>
+          <div class="actions"><button class="btn ghost" id="bulk-prev" type="button">Previous</button><span class="mono small" id="bulk-page"></span><button class="btn ghost" id="bulk-nextpage" type="button">Next</button></div>
+        </div>
+        <p class="tiny muted" style="margin-top:.5rem">Select a row to see the full complaint, the reason and the rules applied.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ HOW IT WORKS ============================ -->
+  <section class="view" id="view-how" role="tabpanel" aria-labelledby="tab-how" hidden>
+    <p class="intro">Follow one complaint through the eight stages that produce its answer, then change it and watch the answer move. Everything shown is what the service actually computed, from <span class="mono">POST /explain</span>.</p>
+    <div class="card">
+      <h2>The pipeline</h2>
+      <div class="pipe" role="img" aria-label="A complaint goes to the safety rules and the sentence classifier side by side, then to the fixed rule precedence, which produces the answer">
+        <div class="pnode"><span class="pstep">1</span><b>Complaint</b><span>Text, product and age, cleaned up</span></div>
+        <span class="parrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 12h14m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="pstack">
+          <div class="pnode safety"><span class="pstep">2</span><b>Safety rules C1 and C2</b><span>Fixed rules, typo-tolerant, never trained</span></div>
+          <div class="pnode model"><span class="pstep">3</span><b>Sentence classifier</b><span>Each sentence: a symptom, or none</span></div>
+        </div>
+        <span class="parrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 12h14m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="pnode rules"><span class="pstep">4</span><b>Fixed rule order</b><span>C1, then C4 or C6, C3, C5, then a single symptom. Escalation comes from C1 and C2 only</span></div>
+        <span class="parrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 12h14m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="pnode out"><span class="pstep">5</span><b>Answer</b><span>Five fields and one reason</span></div>
+      </div>
+      <p class="note" style="margin-top:.75rem">The model never sets the escalation flag. If the model fails to load or throws, the safety rules still answer.</p>
+    </div>
+
+    <form class="card" id="how-form" novalidate>
+      <h2>Ticket to trace</h2>
+      <div class="row">
+        <div class="field"><label for="how-product">Product category</label>
+          <select id="how-product">
+            <option value="washing_machine">washing_machine</option><option value="refrigerator">refrigerator</option><option value="dishwasher">dishwasher</option>
+            <option value="oven_or_cooktop">oven_or_cooktop</option><option value="air_conditioner">air_conditioner</option><option value="water_heater">water_heater</option><option value="microwave">microwave</option>
+          </select></div>
+        <div class="field"><label for="how-age">Product age in days <span class="muted">(optional)</span></label><input id="how-age" type="number" min="0" inputmode="numeric" placeholder="Unknown"></div>
+      </div>
+      <div class="field"><label for="how-text">Complaint text</label><textarea id="how-text" style="min-height:5.5rem" placeholder="Type a complaint, or pick an example below"></textarea></div>
+      <div class="actions"><button class="btn" id="how-run" type="submit">Trace it</button><button class="btn ghost" id="how-copy" type="button">Use the ticket from Classify</button></div>
+      <div class="chips" id="how-examples" style="margin-top:.875rem"></div>
+    </form>
+    <div id="how-error" class="error" hidden style="margin-top:1rem"></div>
+
+    <div id="how-out" hidden>
+      <div class="card" style="margin-top:1.25rem">
+        <h2>In one sentence</h2>
+        <p id="how-summary" style="color:var(--text);font-size:1.125rem"></p>
+        <h3 style="margin:1.25rem 0 .5rem">The complaint, as the service read it</h3>
+        <p class="marked" id="how-marked"></p>
+        <div class="legend" id="how-legend"></div>
+      </div>
+
+      <div class="card">
+        <h2>What if</h2>
+        <p class="small muted" style="margin-bottom:.75rem">Change one thing and the trace is recomputed. The line below says what moved.</p>
+        <div class="actions">
+          <span class="small muted">Age</span>
+          <button class="chip" type="button" data-age="5">5 days</button><button class="chip" type="button" data-age="400">400 days</button><button class="chip" type="button" data-age="">Unknown</button>
+          <span class="small muted" style="margin-left:.5rem">Product</span>
+          <button class="chip" type="button" data-product="oven_or_cooktop">oven_or_cooktop</button><button class="chip" type="button" data-product="refrigerator">refrigerator</button><button class="chip" type="button" data-product="water_heater">water_heater</button>
+        </div>
+        <div class="actions" style="margin-top:.625rem">
+          <span class="small muted">Text</span>
+          <button class="chip" type="button" data-add=" There was smoke coming out of it.">Add a safety mention</button>
+          <button class="chip" type="button" data-add=" I can smell gas when it is on.">Add a gas smell</button>
+          <button class="chip" type="button" data-add=" Also the door latch is broken.">Add a second symptom</button>
+          <button class="chip" type="button" id="how-reset">Reset to the original</button>
+        </div>
+        <p class="diff" id="how-diff" aria-live="polite"></p>
+      </div>
+
+      <div class="stepper" role="group" aria-label="Step through the stages">
+        <button class="btn ghost" id="how-back" type="button">Back</button>
+        <button class="btn" id="how-next" type="button">Next stage</button>
+        <button class="btn ghost" id="how-all" type="button">Show all</button>
+        <span class="mono small" id="how-pos" aria-live="polite"></span>
+        <div class="rail" id="how-rail"></div>
+      </div>
+      <div id="how-stages"></div>
+    </div>
+  </section>
+
+  <!-- ============================ EVALS ============================ -->
+  <section class="view" id="view-evals" role="tabpanel" aria-labelledby="tab-evals" hidden>
+    <p class="intro">Offline evaluation of the model and rules, produced by <span class="mono">python -m fault.evaluate</span> and stored in the repository. These numbers do not change while the service runs; live traffic is on the Dashboard tab.</p>
+    <div id="sc-missing" class="empty" hidden>No scorecard found. Run <span class="mono">python -m fault.evaluate</span> to create it.</div>
+    <div id="sc-body">
+      <div class="verdict" id="ev-verdict"></div>
+      <div class="tiles" id="ev-tiles"></div>
+      <nav class="subnav" aria-label="Evaluation sections">
+        <a href="#ev-s-schemes">Validation</a><a href="#ev-s-categories">Categories</a><a href="#ev-s-safety">Safety flag</a><a href="#ev-s-confidence">Confidence</a><a href="#ev-s-slices">Slices</a><a href="#ev-s-robust">Typos</a><a href="#ev-s-gates">Release gates</a>
+      </nav>
+
+      <div class="card" id="ev-s-schemes">
+        <h2>Validation: how well does it generalise?</h2>
+        <p class="what">Macro-F1 over the fault categories under three ways of splitting the data. The line through each bar is the 95% confidence interval.</p>
+        <div id="ev-schemes-chart"></div>
+        <p class="note" style="margin-top:1rem">Scheme A reuses wording seen in training, so it is optimistic. Schemes B and C were built by someone who had read the tickets, so they are still somewhat optimistic. <span id="ev-gap"></span></p>
+        <details><summary>All metrics for each scheme</summary><div class="scroll" style="max-height:none;margin-top:.5rem"><table id="sc-schemes"><thead></thead><tbody></tbody></table></div></details>
+      </div>
+
+      <div class="card" id="ev-s-categories">
+        <h2>Categories <span class="tiny muted">scheme B, unseen wording</span></h2>
+        <p class="what">Precision: of the tickets given this category, how many were right. Recall: of the tickets that truly have it, how many were found. F1 combines the two.</p>
+        <div class="scroll" style="max-height:none"><table id="sc-classes"><thead></thead><tbody></tbody></table></div>
+        <div class="grid2" style="margin-top:1.5rem">
+          <div><h3 style="margin-bottom:.5rem">Largest confusions</h3><div class="bars" id="ev-confusions"></div></div>
+          <div><h3 style="margin-bottom:.5rem">Confusion matrix <span class="tiny muted">rows true, columns predicted</span></h3><div class="scroll" style="max-height:none"><table class="cm" id="sc-cm"></table></div></div>
+        </div>
+      </div>
+
+      <div class="card" id="ev-s-safety">
+        <h2>Safety flag <span class="tiny muted">escalate, scheme B</span></h2>
+        <p class="what">A missed escalation is the costliest mistake, so recall matters most here.</p>
+        <div class="grid2">
+          <div><div class="bigstat"><b id="ev-caught"></b><span>escalations caught</span></div><div class="tiles" id="ev-esc" style="margin:1rem 0 0"></div></div>
+          <div><h3 style="margin-bottom:.5rem">Recall by safety family</h3><div class="bars" id="ev-family"></div></div>
+        </div>
+        <p class="note" style="margin-top:1rem">The safety rules are not trained, so every escalated ticket in the data is a fair test of them. A separate suite of 166 hand-written edge cases (typos, Hinglish, look-alike words) runs in the tests.</p>
+      </div>
+
+      <div class="card" id="ev-s-confidence">
+        <h2>Confidence <span class="tiny muted">scheme B</span></h2>
+        <p class="what">Is a stated confidence of 0.9 right about 90% of the time, and are low-confidence answers the ones most likely to be wrong?</p>
+        <div class="tiles" id="ev-conf"></div>
+        <div class="grid2">
+          <div><h3 style="margin-bottom:.5rem">Reliability diagram</h3><div id="sc-rel"></div><p class="tiny muted">Points on the dashed line are perfectly calibrated. Point size shows how many tickets.</p></div>
+          <div><h3 style="margin-bottom:.5rem">Accuracy if only the most confident tickets are automated</h3><div id="ev-cov"></div><p class="tiny muted">The rest would go to a person.</p></div>
+        </div>
+        <p class="note" style="margin-top:1rem">Calibration cannot be perfect here by design: rule C6 forces confidence below 0.3 and rule C5 caps it at 0.70, although both paths are usually right.</p>
+      </div>
+
+      <div class="card" id="ev-s-slices">
+        <h2>Slices <span class="tiny muted">accuracy on scheme B</span></h2>
+        <p class="what">The same score broken down, to see where it is weaker.</p>
+        <div class="grid2">
+          <div><h3 style="margin-bottom:.5rem">By product</h3><div class="bars" id="ev-slice-product"></div></div>
+          <div><h3 style="margin-bottom:.5rem">By decision path</h3><div class="bars" id="ev-slice-decision_path"></div></div>
+        </div>
+        <div class="grid2" style="margin-top:1.25rem">
+          <div><h3 style="margin-bottom:.5rem">By text length</h3><div class="bars" id="ev-slice-text_length"></div></div>
+          <div><h3 style="margin-bottom:.5rem">By number of symptoms</h3><div class="bars" id="ev-slice-symptom_count"></div></div>
+        </div>
+      </div>
+
+      <div class="card" id="ev-s-robust">
+        <h2>Typos <span class="tiny muted">letters swapped, dropped or doubled at random, scheme B</span></h2>
+        <div class="grid2">
+          <div id="sc-noise"></div>
+          <div><p class="what">Scores stay high with light typos and fall as text gets noisier. Only one-letter slips in safety words are repaired; repairing two caused false escalations.</p>
+               <h3 style="margin:1rem 0 .5rem">Model card</h3><dl class="kv" id="ev-model" style="margin-top:0"></dl></div>
+        </div>
+      </div>
+
+      <div class="card" id="ev-s-gates">
+        <h2>Release gates</h2>
+        <p class="what"><span class="mono">python -m fault.evaluate</span> exits with an error if any gate fails, so a regression cannot ship unnoticed.</p>
+        <div class="gates" id="sc-gates"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ DASHBOARD ============================ -->
+  <section class="view" id="view-dashboard" role="tabpanel" aria-labelledby="tab-dashboard" hidden>
+    <div class="actions" style="margin-bottom:1.25rem">
+      <p class="intro" style="margin:0;flex:1;min-width:16rem">What the service has handled since it started, and how. Updates every 5 seconds.</p>
+      <span class="tiny muted mono" id="live-stamp"></span>
+      <button class="btn ghost" id="dash-demo" type="button">Send 40 sample tickets</button>
+    </div>
+    <div class="kpis" id="dash-kpis"></div>
+
+    <div class="card">
+      <h2>Tickets over the last 30 minutes</h2>
+      <p class="what">How much is arriving each minute, and how much of it needs a person.</p>
+      <div id="dash-series"></div>
+      <div class="legendline"><span><i style="background:var(--info)"></i>handled automatically</span><span><i style="background:var(--danger)"></i>escalated to a person</span></div>
+    </div>
+
+    <div class="grid2 stretch" style="margin-top:var(--gap)">
+      <div class="card"><h2>What is arriving</h2><p class="what">Share of tickets by fault category.</p><div class="donutwrap" id="dash-cats"></div></div>
+      <div class="card"><h2>How answers were decided</h2><p class="what">Fixed rules first; the model decides the rest.</p><div class="donutwrap" id="dash-paths"></div></div>
+    </div>
+
+    <div class="card">
+      <h2>Which product has which fault</h2>
+      <p class="what">Rows are products, columns are fault categories. Darker cells are more frequent, so recurring problems on one appliance stand out.</p>
+      <div class="scroll" style="max-height:none;border:0"><table class="heat" id="dash-heat"></table></div>
+    </div>
+
+    <div class="grid2 stretch" style="margin-top:var(--gap)">
+      <div class="card">
+        <h2>Speed</h2><p class="what">95% of requests are answered within the time shown. The brief allows 1,000 ms.</p>
+        <div id="dash-gauge"></div>
+        <h3 style="margin:1rem 0 .25rem">p95 per minute, ms</h3><div id="dash-p95"></div>
+      </div>
+      <div class="card">
+        <h2>How sure the answers are</h2><p class="what">Low-confidence answers are the ones worth a second look.</p>
+        <div id="dash-conf"></div>
+        <div class="legendline"><span><i style="background:var(--danger)"></i>below 0.3</span><span><i style="background:var(--warn)"></i>0.3 to 0.7</span><span><i style="background:var(--ok)"></i>above 0.7</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Safety</h2>
+      <p class="what">Tickets that must be seen by a person. Only the product, category and rule are kept, never the complaint text.</p>
+      <div class="grid2">
+        <div><div class="tiles three" id="dash-esc" style="margin-bottom:0"></div></div>
+        <div><h3 style="margin-bottom:.5rem">Most recent escalations</h3><ul class="recent" id="dash-recent"></ul></div>
+      </div>
+      <div class="quality" id="dash-quality"></div>
+    </div>
+    <p class="note" style="margin-top:var(--gap)">Figures cover the last 5,000 requests since the service started and reset on restart.</p>
+  </section>
+</main>
+<footer id="footer">Runs fully offline. No external requests.</footer>
+
+<script>
+"use strict";
+// ---------- helpers (server text is only ever written with textContent) ----------
+const $ = (id) => document.getElementById(id);
+function h(tag, props, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (k === "class") e.className = v; else if (k === "text") e.textContent = v;
+    else if (k === "style") e.style.cssText = v; else if (v !== false && v != null) e.setAttribute(k, v);
+  }
+  for (const kid of kids.flat(Infinity)) if (kid != null) e.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  return e;
+}
+function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); return node; }
+const fmt = (x, d = 3) => (x == null || Number.isNaN(x)) ? "n/a" : Number(x).toFixed(d);
+const pct = (x) => (x == null) ? "n/a" : (100 * x).toFixed(1) + "%";
+
+const RULES = [
+  { id: "C1", name: "Safety mention", text: "Sparks, smoke, burning smell, fire, electric shock or a tripped supply: electrical fault, always escalate." },
+  { id: "C2", name: "Gas smell", text: "Gas smell on an oven, cooktop or water heater: escalate. The category comes from the rest of the text." },
+  { id: "C3", name: "Early-life installation", text: "Product is 30 days old or less and the complaint is about fit, levelling, connection or first use." },
+  { id: "C4", name: "Error code alone", text: "Only an error code, no other symptom: control panel or display." },
+  { id: "C5", name: "Two symptoms", text: "Two categories equally supported: the earlier one in the taxonomy wins, confidence lowered." },
+  { id: "C6", name: "Not a complaint", text: "Thank-you note, sales enquiry or spam: other, confidence below 0.3." },
+];
+function rulesIn(reason) {
+  const out = new Set();
+  for (const m of String(reason || "").matchAll(/\bC([1-6])\b/g)) out.add("C" + m[1]);
+  return out;
+}
+function confWord(c) { return c < 0.3 ? "low" : c <= 0.7 ? "medium" : "high"; }
+function warnIcon() {
+  const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  s.setAttribute("width", "22"); s.setAttribute("height", "22"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("aria-hidden", "true");
+  const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  p.setAttribute("d", "M12 2 1 21h22L12 2zm1 15h-2v2h2v-2zm0-7h-2v5h2v-5z"); p.setAttribute("fill", "#ff4d4f");
+  s.append(p); return s;
+}
+// ---------- names and colours used the same way on every tab ----------
+const CATS = ["no_power", "not_heating", "not_cooling", "water_leak", "drainage_or_blockage", "noise_or_vibration", "door_seal_or_latch", "control_panel_or_display", "electrical_or_control_board", "motor_or_drive", "installation_or_setup", "other"];
+const CAT_NAME = { no_power: "No power", not_heating: "Not heating", not_cooling: "Not cooling", water_leak: "Water leak", drainage_or_blockage: "Drainage or blockage", noise_or_vibration: "Noise or vibration",
+  door_seal_or_latch: "Door, seal or latch", control_panel_or_display: "Control panel or display", electrical_or_control_board: "Electrical or control board", motor_or_drive: "Motor or drive", installation_or_setup: "Installation or setup", other: "Other" };
+const CAT_SHORT = { no_power: "Power", not_heating: "Heating", not_cooling: "Cooling", water_leak: "Leak", drainage_or_blockage: "Drain", noise_or_vibration: "Noise", door_seal_or_latch: "Door", control_panel_or_display: "Panel",
+  electrical_or_control_board: "Electrical", motor_or_drive: "Motor", installation_or_setup: "Install", other: "Other" };
+const CAT_COLOR = { no_power: "#94a3b8", not_heating: "#fb923c", not_cooling: "#38bdf8", water_leak: "#60a5fa", drainage_or_blockage: "#2dd4bf", noise_or_vibration: "#facc15", door_seal_or_latch: "#f472b6", control_panel_or_display: "#a78bfa",
+  electrical_or_control_board: "#f87171", motor_or_drive: "#4ade80", installation_or_setup: "#c084fc", other: "#71717a" };
+const PRODUCTS = ["washing_machine", "refrigerator", "dishwasher", "oven_or_cooktop", "air_conditioner", "water_heater", "microwave"];
+const COLOR = { accent: "#ff6b35", danger: "#ff4d4f", ok: "#3ecf8e", warn: "#ffb020", info: "#5b9dff", violet: "#a78bfa" };
+const pretty = (c) => CAT_NAME[c] || String(c).replace(/_/g, " ");
+const catColor = (c) => CAT_COLOR[c] || "#8a8a8a";
+const words = (s) => String(s).replace(/_/g, " ");
+const hexA = (hex, a) => "rgba(" + [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(",") + "," + a + ")";
+// how a decision was reached, grouped for charts
+const PATH_GROUP = { C1: "Safety rule", C3: "Other business rule", C4: "Other business rule", C5: "Other business rule", C6: "Other business rule", model: "Model, one clear symptom", weak: "Low-confidence guess", empty: "Low-confidence guess", fallback: "Low-confidence guess" };
+const PATH_COLOR = { "Safety rule": COLOR.danger, "Other business rule": COLOR.violet, "Model, one clear symptom": COLOR.info, "Low-confidence guess": COLOR.warn };
+const PATH_NAME = { C1: "Safety rule C1", C3: "Installation rule C3", C4: "Error-code rule C4", C5: "Two-symptom rule C5", C6: "Not a complaint, C6", model: "Model, one symptom", weak: "Low-confidence guess", empty: "No text", fallback: "Safe fallback" };
+
+function barRow(label, value, max, text, color) {
+  const w = max > 0 ? Math.max(1, 100 * value / max) : 0;
+  return h("div", { class: "barrow" }, h("span", { text: label, title: label }),
+    h("div", { class: "meter" }, h("i", { style: "width:" + w + "%" + (color ? ";background:" + color : "") })), h("span", { class: "mono", style: "text-align:right", text: text == null ? String(value) : text }));
+}
+function tile(value, caption) { return h("div", { class: "tile" }, h("b", { text: value }), h("span", { text: caption })); }
+function fillTable(table, head, rows) {
+  const thead = clear(table.tHead || table.createTHead()), tbody = clear(table.tBodies[0] || table.createTBody());
+  thead.append(h("tr", {}, head.map((c) => h("th", { class: c.num ? "num" : "", text: c.t }))));
+  for (const r of rows) tbody.append(h("tr", { class: r.cls || "" }, r.cells.map((c, i) => (c && c.nodeType) ? h("td", { class: head[i].num ? "num" : "" }, c) : h("td", { class: head[i].num ? "num" : "", text: c == null ? "" : String(c) }))));
+}
+function download(name, text, type) {
+  const a = h("a", { href: URL.createObjectURL(new Blob([text], { type })), download: name });
+  document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+async function classifyOne(ticket) {
+  const t0 = performance.now();
+  const r = await fetch("/classify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(ticket) });
+  if (!r.ok) throw new Error("The service answered with HTTP " + r.status);
+  return { out: await r.json(), ms: performance.now() - t0 };
+}
+
+// ---------- tabs ----------
+function show(view) {
+  for (const t of document.querySelectorAll(".tab")) { const on = t.dataset.view === view; t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1; }
+  for (const v of document.querySelectorAll(".view")) v.hidden = v.id !== "view-" + view;
+  if (view === "dashboard") loadMetrics();
+  if (view === "evals") loadScorecard();
+  if (location.hash !== "#" + view) history.replaceState(null, "", "#" + view);
+}
+for (const t of document.querySelectorAll(".tab")) t.addEventListener("click", () => show(t.dataset.view));
+document.querySelector("nav[role=tablist]").addEventListener("keydown", (e) => {        // arrow keys move between tabs
+  const tabs = [...document.querySelectorAll(".tab")], at = tabs.indexOf(document.activeElement);
+  if (at < 0 || !["ArrowRight", "ArrowLeft", "Home", "End"].includes(e.key)) return;
+  e.preventDefault();
+  const to = e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1 : (at + (e.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+  show(tabs[to].dataset.view); tabs[to].focus();
+});
+
+// ---------- health ----------
+const PAGE_API = 4;                                    // must match API_VERSION in app.py
+let healthFails = 0;
+async function fetchWithTimeout(url, ms) {
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), ms);
+  try { return await fetch(url, { cache: "no-store", signal: ctl.signal }); } finally { clearTimeout(timer); }
+}
+async function checkHealth() {
+  let ok = false;
+  try { const r = await fetchWithTimeout("/health", 4000); ok = r.ok && (await r.json()).status === "ok"; } catch (e) { ok = false; }
+  healthFails = ok ? 0 : healthFails + 1;
+  // one missed check is usually a blip (a busy moment, the laptop waking up): say so, and only go red on the second
+  const state = ok ? "ok" : healthFails === 1 ? "wait" : "bad";
+  $("health-dot").className = "dot " + state;
+  $("health-text").textContent = ok ? "Ready" : healthFails === 1 ? "Checking again" : "Not responding";
+  $("offline").hidden = healthFails < 2;
+  if (!ok) setTimeout(checkHealth, healthFails === 1 ? 1500 : 3000);          // look again soon instead of waiting for the next tick
+  else if (!$("stale").dataset.checked) checkVersion();
+}
+async function checkVersion() {
+  let api = 0;
+  try { const r = await fetchWithTimeout("/version", 4000); if (r.ok) api = (await r.json()).api || 0; } catch (e) { return; }
+  $("stale").dataset.checked = "1";
+  $("stale").hidden = api >= PAGE_API;
+}
+
+// ---------- classify one ----------
+const EXAMPLES = [
+  ["Drum not turning", { product_category: "washing_machine", product_age_days: 410, complaint_text: "machine fills with water then just sits there, drum never turns, display shows E21" }],
+  ["Burning smell and spark", { product_category: "oven_or_cooktop", product_age_days: 95, complaint_text: "There was a burning smell and a spark from the back when I switched it on, it is off now" }],
+  ["New fridge, doors not level", { product_category: "refrigerator", product_age_days: 1, complaint_text: "delivered yesterday, the doors are not level and one does not close properly" }],
+  ["Safety with typos", { product_category: "microwave", product_age_days: 300, complaint_text: "PLS HELP smkoe started comming out of the microwve, switched it off imediately" }],
+  ["Gas smell, water heater", { product_category: "water_heater", product_age_days: 800, complaint_text: "Water is not hot enough for a shower. I can smell gas whenever the geyser is on." }],
+  ["Error code only", { product_category: "dishwasher", product_age_days: 120, complaint_text: "Display shows E21" }],
+  ["Thank-you note", { product_category: "refrigerator", product_age_days: 60, complaint_text: "Thanks for the quick service, the technician was very polite!" }],
+  ["Two symptoms", { product_category: "washing_machine", product_age_days: 900, complaint_text: "The washer makes a loud banging noise when running. Also it is completely dead now and will not switch on." }],
+];
+for (const [label, ex] of EXAMPLES) {
+  $("examples").append(h("button", { class: "chip", type: "button", text: label }));
+  $("examples").lastChild.addEventListener("click", () => {
+    $("ticket_id").value = "T-example"; $("product_category").value = ex.product_category;
+    $("product_age_days").value = ex.product_age_days; $("complaint_text").value = ex.complaint_text; updateCount(); submitOne();
+  });
+}
+function updateCount() {
+  const n = $("complaint_text").value.length;
+  $("count").textContent = n + " / 2000"; $("count").className = "mono" + ((n < 5 || n > 2000) ? " warn" : "");
+}
+$("complaint_text").addEventListener("input", updateCount);
+$("form").addEventListener("submit", (e) => { e.preventDefault(); submitOne(); });
+document.addEventListener("keydown", (e) => { if ((e.ctrlKey || e.metaKey) && e.key === "Enter" && !$("view-classify").hidden) submitOne(); });
+
+function readForm() {
+  const age = $("product_age_days").value.trim();
+  return { ticket_id: $("ticket_id").value, product_category: $("product_category").value,
+           complaint_text: $("complaint_text").value, product_age_days: age === "" ? null : Number(age) };
+}
+async function submitOne() {
+  const req = readForm(), btn = $("submit"), body = $("result-body");
+  btn.disabled = true; btn.textContent = "Classifying";
+  try {
+    const { out, ms } = await classifyOne(req); renderResult(req, out, ms);
+    if (window.matchMedia("(max-width: 860px)").matches) $("result").scrollIntoView({ behavior: "smooth", block: "start" });   // result sits below the form on narrow screens
+  }
+  catch (err) {
+    $("result-empty").hidden = true; body.hidden = false;
+    clear(body).append(h("div", { class: "error", role: "alert", text: "The service did not answer. Is it still running? (" + err.message + ")" }));
+  }
+  btn.disabled = false; btn.textContent = "Classify";
+}
+function renderResult(req, out, ms) {
+  const body = clear($("result-body")); $("result-empty").hidden = true; body.hidden = false;
+  const fired = rulesIn(out.reason), c = Number(out.confidence) || 0;
+  if (out.escalate) body.append(h("div", { class: "banner", role: "alert" }, warnIcon(), h("span", { text: "Escalate to a person" }),
+    h("span", { class: "tag red", style: "margin-left:auto", text: fired.has("C1") && fired.has("C2") ? "C1 + C2" : fired.has("C1") ? "C1 safety" : "C2 gas smell" })));
+  else body.append(h("div", { class: "calm" }, h("span", { class: "tag green", text: "No escalation" }), h("span", { text: "No safety rule applies to this ticket." })));
+
+  body.append(h("div", { class: "answer" }, h("span", { class: "swatch", style: "background:" + catColor(out.fault_category) }),
+    h("div", {}, h("div", { class: "tiny muted", text: "Fault category" }), h("div", { class: "name", text: pretty(out.fault_category) }), h("div", { class: "id cat", text: out.fault_category }))));
+
+  const level = c < 0.3 ? COLOR.danger : c <= 0.7 ? COLOR.warn : COLOR.ok;
+  body.append(h("div", { class: "confbox" }, h("span", { class: "small muted", text: "Confidence" }),
+    h("div", { class: "meter" }, h("i", { style: "width:" + Math.round(c * 100) + "%;background:" + level })), h("span", {}, h("b", { text: fmt(c, 2) }), h("span", { class: "small muted", text: "  " + confWord(c) }))));
+  body.append(h("div", { class: "reason", style: "margin-top:1rem", text: out.reason }));
+
+  body.append(h("h3", { style: "margin-top:1.25rem", text: "How it was decided" }));
+  const applied = RULES.filter((r) => fired.has(r.id)), skipped = RULES.filter((r) => !fired.has(r.id));
+  body.append(h("div", { class: "decided" }, applied.length
+    ? applied.map((r) => h("div", { class: "rulecard" + ((r.id === "C1" || r.id === "C2") ? " safety" : "") }, h("span", { class: "badge", text: r.id }), h("div", {}, h("b", { text: r.name }), h("span", { class: "t", text: r.text }))))
+    : h("div", { class: "rulecard model" }, h("span", { class: "badge", text: "Model" }), h("div", {}, h("b", { text: "No business rule overrode this ticket" }), h("span", { class: "t", text: "The category comes from the symptom the classifier found in the text." })))));
+  body.append(h("div", { class: "actions", style: "margin-top:.75rem;gap:.375rem" }, h("span", { class: "tiny muted", text: "Checked, not applied:" }),
+    skipped.map((r) => h("span", { class: "tag", title: r.name + ". " + r.text, text: r.id + " " + r.name }))));
+
+  body.append(h("div", { class: "metaline" }, h("span", {}, "Ticket ", h("b", { text: out.ticket_id || "(none)" })), h("span", {}, "Round trip ", h("b", { text: ms.toFixed(0) + " ms" }))));
+  const curl = "curl -X POST http://localhost:8000/classify -H \"Content-Type: application/json\" -d '" + JSON.stringify(req).replace(/'/g, "'\\''") + "'";
+  const copy = h("button", { class: "btn ghost", type: "button", text: "Copy as curl", style: "margin-top:.5rem" });
+  copy.addEventListener("click", async () => { try { await navigator.clipboard.writeText(curl); copy.textContent = "Copied"; } catch (e) { copy.textContent = "Copy failed"; } setTimeout(() => (copy.textContent = "Copy as curl"), 1500); });
+  body.append(h("details", {}, h("summary", { text: "Raw request and response" }),
+    h("pre", { text: "POST /classify\n" + JSON.stringify(req, null, 2) }), h("pre", { text: JSON.stringify(out, null, 2) }), copy));
+}
+
+// ---------- bulk upload ----------
+const ALIASES = { ticket_id: ["ticket_id", "id", "ticket", "ticketid"], product_category: ["product_category", "product", "category", "appliance"],
+  complaint_text: ["complaint_text", "complaint", "text", "description", "message"], product_age_days: ["product_age_days", "age", "age_days", "product_age"],
+  fault_category: ["fault_category", "label", "expected_category", "true_category"], escalate: ["escalate", "expected_escalate", "escalation"] };
+let bulkRows = [], bulkResults = [], bulkLabelled = false;
+
+function parseCSV(text) {
+  const rows = []; let row = [], cell = "", quoted = false;
+  if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+  const head = text.split(/\r?\n/, 1)[0], count = (ch) => head.split(ch).length - 1;
+  const sep = count("\t") > count(",") && count("\t") >= count(";") ? "\t" : count(";") > count(",") ? ";" : ",";   // comma, semicolon or tab
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (quoted) { if (ch === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else quoted = false; } else cell += ch; }
+    else if (ch === '"') quoted = true;
+    else if (ch === sep) { row.push(cell); cell = ""; }
+    else if (ch === "\n" || ch === "\r") { if (ch === "\r" && text[i + 1] === "\n") i++; row.push(cell); cell = ""; if (row.length > 1 || row[0] !== "") rows.push(row); row = []; }
+    else cell += ch;
+  }
+  row.push(cell); if (row.length > 1 || row[0] !== "") rows.push(row);
+  if (rows.length < 2) throw new Error("The CSV needs a header row and at least one data row.");
+  const header = rows[0].map((x) => x.trim());
+  return rows.slice(1).map((r) => Object.fromEntries(header.map((k, i) => [k, r[i] === undefined ? "" : r[i]])));
+}
+function parseJSON(text) {
+  let data;
+  try { data = JSON.parse(text); }
+  catch (e) { data = text.split(/\r?\n/).filter((l) => l.trim()).map((l, i) => { try { return JSON.parse(l); } catch (x) { throw new Error("Line " + (i + 1) + " is not valid JSON."); } }); }
+  if (!Array.isArray(data)) data = data.tickets || data.data || data.items || data.rows || [data];
+  if (!Array.isArray(data) || !data.length) throw new Error("No tickets found in the JSON file.");
+  return data.filter((x) => x && typeof x === "object");
+}
+const normKey = (x) => String(x).trim().toLowerCase().replace(/[\s\-.]+/g, "_");      // "Ticket ID" -> "ticket_id"
+const plural = (n, word) => n + " " + word + (n === 1 ? "" : "s");
+function pick(obj, field) {
+  const keys = Object.keys(obj);
+  for (const a of ALIASES[field]) { const k = keys.find((x) => normKey(x) === a); if (k !== undefined) return obj[k]; }
+  return undefined;
+}
+function toTicket(raw, i) {
+  const age = pick(raw, "product_age_days"), id = pick(raw, "ticket_id"), exp = pick(raw, "fault_category"), esc = pick(raw, "escalate");
+  const ageNum = (age === "" || age == null || Number.isNaN(Number(age))) ? null : Number(age);
+  return { ticket: { ticket_id: (id == null || id === "") ? "row-" + (i + 1) : String(id), product_category: String(pick(raw, "product_category") ?? ""),
+                     complaint_text: String(pick(raw, "complaint_text") ?? ""), product_age_days: ageNum },
+           expected: (exp == null || exp === "") ? null : String(exp).trim(),
+           expectedEsc: (esc == null || esc === "") ? null : /^(true|1|yes)$/i.test(String(esc).trim()) };
+}
+function bulkStep(n) { [...$("bulk-steps").children].forEach((li, i) => { li.classList.toggle("now", i === n - 1); li.classList.toggle("done", i < n - 1); }); }
+function bulkFail(msg) { $("bulk-error").hidden = false; $("bulk-error").textContent = msg; $("bulk-run").disabled = true; $("bulk-file").hidden = true; bulkStep(1); }
+let bulkPage = 0, bulkOpen = null;
+const BULK_PAGE = 50;
+async function loadFile(file) {
+  $("bulk-error").hidden = true; $("bulk-out").hidden = true; $("bulk-file").hidden = true; $("bulk-progress").hidden = true; bulkRows = [];
+  if (!file) return;
+  if (file.size > 20 * 1024 * 1024) return bulkFail("That file is larger than 20 MB.");
+  try {
+    const text = await file.text();
+    const raw = /\.jsonl?$/i.test(file.name) || /^[\s]*[\[{]/.test(text) ? parseJSON(text) : parseCSV(text);
+    const rows = raw.map(toTicket);
+    if (!rows.some((r) => r.ticket.complaint_text)) return bulkFail("No complaint_text column found. Expected columns: ticket_id, product_category, complaint_text, product_age_days.");
+    bulkRows = rows.slice(0, 5000);
+    bulkLabelled = bulkRows.some((r) => r.expected !== null);
+    $("bulk-name").textContent = file.name;
+    $("bulk-info").textContent = plural(bulkRows.length, "ticket") + (rows.length > 5000 ? " (first 5,000 of " + rows.length + ")" : "") + ", " + (file.size / 1024).toFixed(0) + " KB" + (bulkLabelled ? ". Labels found: results will be scored." : ". No labels: results will not be scored.");
+    const keys = Object.keys(raw[0] || {}), need = { ticket_id: "optional", product_category: "recommended", complaint_text: "required", product_age_days: "optional", fault_category: "for scoring", escalate: "for scoring" };
+    fillTable($("bulk-map"), [{ t: "Field" }, { t: "Column in your file" }, { t: "" }], Object.keys(need).map((f) => {
+      const k = keys.find((x) => ALIASES[f].includes(normKey(x)));
+      return { cells: [h("span", { class: "mono", text: f }), k ? h("span", { class: "mono", text: k }) : h("span", { class: "muted", text: "not found (" + need[f] + ")" }), h("span", { class: "tag " + (k ? "green" : need[f] === "required" ? "red" : ""), text: k ? "Found" : "Missing" })] };
+    }));
+    clear($("bulk-preview")).append(...bulkRows.slice(0, 3).map((r) => h("div", { class: "sent" }, h("div", { class: "tiny muted mono", text: r.ticket.ticket_id + "  ·  " + (r.ticket.product_category || "no product") + "  ·  " + (r.ticket.product_age_days == null ? "age unknown" : r.ticket.product_age_days + " days") }),
+      h("div", { class: "small", style: "margin-top:.25rem;color:var(--text)", text: r.ticket.complaint_text.slice(0, 180) + (r.ticket.complaint_text.length > 180 ? "…" : "") }))));
+    $("bulk-run").disabled = false; $("bulk-run").textContent = "Classify " + plural(bulkRows.length, "ticket"); $("bulk-file").hidden = false; bulkStep(2);
+  } catch (err) { bulkFail("Could not read the file. " + err.message); }
+}
+$("file").addEventListener("change", (e) => loadFile(e.target.files[0]));
+const drop = $("drop");
+["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", (e) => loadFile(e.dataTransfer.files[0]));
+$("bulk-sample").addEventListener("click", () => {
+  const lines = ["ticket_id,product_category,complaint_text,product_age_days"];
+  EXAMPLES.forEach(([, ex], i) => lines.push(["S-" + (i + 1), ex.product_category, '"' + ex.complaint_text.replace(/"/g, '""') + '"', ex.product_age_days].join(",")));
+  download("sample_tickets.csv", lines.join("\n") + "\n", "text/csv");
+});
+$("bulk-run").addEventListener("click", async () => {
+  const btn = $("bulk-run"), label = btn.textContent; btn.disabled = true; btn.textContent = "Classifying";
+  $("bulk-error").hidden = true; $("bulk-progress").hidden = false; $("bulk-out").hidden = true;
+  bulkResults = new Array(bulkRows.length); let done = 0, next = 0, failed = 0; const t0 = performance.now();
+  const tick = () => {
+    const share = done / bulkRows.length, secs = (performance.now() - t0) / 1000, left = share > 0 ? secs / share - secs : 0;
+    $("bulk-bar").style.width = (100 * share).toFixed(1) + "%"; $("bulk-count").textContent = Math.round(100 * share) + "%   " + done + " of " + bulkRows.length;
+    $("bulk-eta").textContent = done === bulkRows.length ? "finished in " + secs.toFixed(1) + " s" : "about " + Math.ceil(left) + " s left";
+  };
+  async function worker() {
+    while (next < bulkRows.length) {
+      const i = next++, row = bulkRows[i];
+      try { const { out, ms } = await classifyOne(row.ticket); bulkResults[i] = { ...row, out, ms, i }; }
+      catch (err) { failed++; bulkResults[i] = { ...row, out: null, ms: 0, i }; }
+      done++; if (done % 5 === 0 || done === bulkRows.length) tick();
+    }
+  }
+  tick(); await Promise.all([worker(), worker(), worker(), worker()]);
+  const seconds = (performance.now() - t0) / 1000;
+  btn.disabled = false; btn.textContent = label;
+  if (failed === bulkRows.length) return bulkFail("The service did not answer. Is it still running?");
+  if (failed) { $("bulk-error").hidden = false; $("bulk-error").textContent = failed + " rows got no answer and are left out."; }
+  renderBulk(seconds);
+});
+function macroF1(pairs, labels) {
+  let sum = 0;
+  for (const l of labels) {
+    let tp = 0, fp = 0, fn = 0;
+    for (const [t, p] of pairs) { if (p === l && t === l) tp++; else if (p === l) fp++; else if (t === l) fn++; }
+    sum += (2 * tp + fp + fn) ? (2 * tp) / (2 * tp + fp + fn) : 0;
+  }
+  return labels.length ? sum / labels.length : 0;
+}
+function renderBulk(seconds) {
+  const ok = bulkResults.filter((r) => r && r.out), n = ok.length;
+  const esc = ok.filter((r) => r.out.escalate).length, low = ok.filter((r) => r.out.confidence < 0.5).length, times = ok.map((r) => r.ms).sort((a, b) => a - b);
+  clear($("bulk-tiles")).append(tile(String(n), n === 1 ? "ticket classified" : "tickets classified"), tile(String(esc), "need a person (" + pct(n ? esc / n : 0) + ")"), tile(String(low), "low confidence, below 0.5"),
+    tile(fmt(ok.reduce((s, r) => s + r.out.confidence, 0) / Math.max(n, 1), 2), "average confidence"),
+    tile((times[Math.floor(times.length * 0.95)] || 0).toFixed(0) + " ms", "p95 round trip"), tile((n / Math.max(seconds, 0.001)).toFixed(0) + " /s", "throughput"));
+  $("bulk-alert").hidden = !esc;
+  if (esc) { clear($("bulk-alert-icon")).append(warnIcon()); $("bulk-alert-text").textContent = esc + (esc === 1 ? " ticket must" : " tickets must") + " be seen by a person (safety rule C1 or gas rule C2)."; }
+  const cats = {}, rules = { "no rule (single symptom)": 0 };
+  for (const r of ok) { cats[r.out.fault_category] = (cats[r.out.fault_category] || 0) + 1; const f = rulesIn(r.out.reason); if (!f.size) rules["no rule (single symptom)"]++; for (const x of f) rules[x] = (rules[x] || 0) + 1; }
+  const draw = (node, obj, title, name, colour) => { const e = Object.entries(obj).sort((a, b) => b[1] - a[1]); const max = Math.max(1, ...e.map((x) => x[1]));
+    clear(node).append(h("h3", { style: "margin-bottom:.25rem", text: title }), ...e.map(([k, v]) => barRow(name(k), v, max, v + "  " + pct(v / Math.max(n, 1)), colour(k)))); };
+  draw($("bulk-cats"), cats, "By fault category", pretty, catColor);
+  draw($("bulk-rules"), rules, "By business rule", (k) => k, (k) => (k === "C1" || k === "C2") ? COLOR.danger : k.startsWith("no rule") ? COLOR.info : COLOR.violet);
+  const scored = ok.filter((r) => r.expected !== null);
+  $("bulk-score").hidden = !scored.length;
+  if (scored.length) {
+    const pairs = scored.map((r) => [r.expected, r.out.fault_category]), labels = [...new Set(pairs.map((p) => p[0]))];
+    const acc = pairs.filter(([t, p]) => t === p).length / pairs.length;
+    const e = ok.filter((r) => r.expectedEsc !== null), should = e.filter((r) => r.expectedEsc), missed = should.filter((r) => !r.out.escalate).length, extra = e.filter((r) => !r.expectedEsc && r.out.escalate).length;
+    clear($("bulk-score-body")).append(h("div", { class: "tiles", style: "margin-bottom:0" }, tile(fmt(macroF1(pairs, labels), 3), "macro-F1 over " + labels.length + " categories in the file"), tile(pct(acc), "accuracy on " + pairs.length + " labelled rows"),
+      tile(String(pairs.length - Math.round(acc * pairs.length)), "rows that disagree with the label"),
+      e.length ? tile(should.length ? pct((should.length - missed) / should.length) : "n/a", "escalation recall (" + missed + " missed)") : null, e.length ? tile(String(extra), "false escalations") : null));
+  }
+  $("bulk-out").hidden = false; $("bulk-filter").value = "all"; $("bulk-sort").value = esc ? "esc" : "file"; $("bulk-search").value = ""; bulkPage = 0; bulkOpen = null; drawBulkTable(); bulkStep(3);
+  $("bulk-out").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function bulkView() {
+  const mode = $("bulk-filter").value, q = $("bulk-search").value.trim().toLowerCase(), sort = $("bulk-sort").value;
+  let rows = bulkResults.filter((r) => r && r.out).filter((r) => mode === "all" || (mode === "esc" && r.out.escalate) || (mode === "low" && r.out.confidence < 0.5) || (mode === "wrong" && r.expected !== null && r.expected !== r.out.fault_category));
+  if (q) rows = rows.filter((r) => (r.out.ticket_id + " " + r.out.fault_category + " " + r.out.reason + " " + r.ticket.complaint_text + " " + r.ticket.product_category).toLowerCase().includes(q));
+  const by = { file: (a, b) => a.i - b.i, esc: (a, b) => (b.out.escalate - a.out.escalate) || (a.i - b.i), "conf-asc": (a, b) => a.out.confidence - b.out.confidence, "conf-desc": (a, b) => b.out.confidence - a.out.confidence, cat: (a, b) => a.out.fault_category.localeCompare(b.out.fault_category) || (a.i - b.i) };
+  return rows.sort(by[sort]);
+}
+function drawBulkTable() {
+  const rows = bulkView(), pages = Math.max(1, Math.ceil(rows.length / BULK_PAGE)); bulkPage = Math.min(bulkPage, pages - 1);
+  const head = ["Ticket", "Product", "Category"].concat(bulkLabelled ? ["Label"] : [], ["Confidence", "Escalate", "Rules"]);
+  const table = $("bulk-table"), thead = clear(table.tHead || table.createTHead()), tbody = clear(table.tBodies[0] || table.createTBody());
+  thead.append(h("tr", {}, head.map((t) => h("th", { text: t }))));
+  for (const r of rows.slice(bulkPage * BULK_PAGE, (bulkPage + 1) * BULK_PAGE)) {
+    const wrong = r.expected !== null && r.expected !== r.out.fault_category, fired = [...rulesIn(r.out.reason)], c = r.out.confidence;
+    const cells = [h("td", { class: "mono", text: r.out.ticket_id }), h("td", { text: r.ticket.product_category }), h("td", { style: "color:var(--text);white-space:nowrap" }, h("i", { style: "display:inline-block;width:.5rem;height:.5rem;border-radius:50%;margin-right:.5rem;background:" + catColor(r.out.fault_category) }), pretty(r.out.fault_category))];
+    if (bulkLabelled) cells.push(h("td", { class: "mono", style: wrong ? "color:var(--danger)" : "color:var(--text-muted)", text: r.expected || "" }));
+    cells.push(h("td", {}, h("div", { class: "actions", style: "gap:.5rem;flex-wrap:nowrap" }, h("div", { class: "meter", style: "width:4.5rem" }, h("i", { style: "width:" + Math.round(c * 100) + "%" + (c < 0.5 ? ";background:#ffb020" : "") })), h("span", { class: "mono", text: fmt(c, 2) }))),
+      h("td", {}, h("span", { class: "tag" + (r.out.escalate ? " red" : ""), text: r.out.escalate ? "Escalate" : "No" })),
+      h("td", {}, fired.length ? fired.map((x) => h("span", { class: "tag " + ((x === "C1" || x === "C2") ? "red" : "on"), style: "margin-right:.25rem", text: x })) : h("span", { class: "tiny muted", text: "none" })));
+    const tr = h("tr", { class: (r.out.escalate ? "esc " : "") + (bulkOpen === r.i ? "open" : ""), tabindex: "0", role: "button", "aria-expanded": String(bulkOpen === r.i) }, cells);
+    const toggle = () => { bulkOpen = bulkOpen === r.i ? null : r.i; drawBulkTable(); };
+    tr.addEventListener("click", toggle); tr.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+    tbody.append(tr);
+    if (bulkOpen === r.i) tbody.append(h("tr", { class: "detail" }, h("td", { colspan: String(head.length) },
+      h("div", { class: "tiny muted", text: "Complaint" }), h("p", { style: "color:var(--text);margin:.125rem 0 .75rem", text: r.ticket.complaint_text }),
+      h("div", { class: "reason", style: "margin-top:0", text: r.out.reason }),
+      h("p", { class: "tiny muted mono", style: "margin-top:.5rem", text: "age: " + (r.ticket.product_age_days == null ? "unknown" : r.ticket.product_age_days + " days") + "   ·   round trip: " + r.ms.toFixed(0) + " ms" + (r.expected !== null ? "   ·   label: " + r.expected + (wrong ? " (disagrees)" : " (agrees)") : "") }))));
+  }
+  if (!rows.length) tbody.append(h("tr", {}, h("td", { colspan: String(head.length), class: "muted", style: "text-align:center;padding:1.5rem", text: "No rows match." })));
+  $("bulk-shown").textContent = rows.length + " of " + bulkResults.filter((r) => r && r.out).length + " rows";
+  $("bulk-page").textContent = "Page " + (bulkPage + 1) + " of " + pages; $("bulk-prev").disabled = bulkPage <= 0; $("bulk-nextpage").disabled = bulkPage >= pages - 1;
+}
+for (const id of ["bulk-filter", "bulk-sort"]) $(id).addEventListener("change", () => { bulkPage = 0; bulkOpen = null; drawBulkTable(); });
+$("bulk-search").addEventListener("input", () => { bulkPage = 0; bulkOpen = null; drawBulkTable(); });
+$("bulk-prev").addEventListener("click", () => { bulkPage--; bulkOpen = null; drawBulkTable(); });
+$("bulk-nextpage").addEventListener("click", () => { bulkPage++; bulkOpen = null; drawBulkTable(); });
+$("bulk-alert-btn").addEventListener("click", () => { $("bulk-filter").value = "esc"; bulkPage = 0; drawBulkTable(); $("bulk-table").scrollIntoView({ behavior: "smooth", block: "center" }); });
+function bulkExport() { return bulkResults.filter((r) => r && r.out).map((r) => ({ ...r.out, rules_applied: [...rulesIn(r.out.reason)].join(" "), product_category: r.ticket.product_category, product_age_days: r.ticket.product_age_days, complaint_text: r.ticket.complaint_text })); }
+$("bulk-json").addEventListener("click", () => download("classified_tickets.json", JSON.stringify(bulkExport(), null, 2), "application/json"));
+$("bulk-csv").addEventListener("click", () => {
+  const rows = bulkExport(), cols = ["ticket_id", "fault_category", "confidence", "escalate", "rules_applied", "reason", "product_category", "product_age_days", "complaint_text"];
+  const q = (v) => { const s = v == null ? "" : String(v); return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  download("classified_tickets.csv", [cols.join(",")].concat(rows.map((r) => cols.map((c) => q(r[c])).join(","))).join("\n") + "\n", "text/csv");
+});
+
+// ---------- chart helpers (inline SVG, no library) ----------
+const SVGNS = "http://www.w3.org/2000/svg";
+function sv(tag, attrs, ...kids) {
+  const e = document.createElementNS(SVGNS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v);
+  for (const kid of kids.flat(Infinity)) if (kid != null) e.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  return e;
+}
+const label = (x, y, s, anchor, size, fill) => sv("text", { x, y, "text-anchor": anchor || "start", fill: fill || "#9a9aa3", "font-size": size || 11, "font-family": "Consolas, monospace" }, s);
+function miniBars(values, color) {                    // one bar per step under a headline number; reads well with little data
+  const W = 200, H = 44, vals = values.map((v) => (v == null ? 0 : v)), max = Math.max(...vals), step = W / vals.length, bw = Math.max(1.5, step - 2);
+  const g = sv("svg", { viewBox: "0 0 " + W + " " + H, preserveAspectRatio: "none", "aria-hidden": "true" });
+  vals.forEach((v, i) => {
+    const hgt = max > 0 && v > 0 ? Math.max(3, (H - 4) * (v / max)) : 2;      // empty steps keep a faint baseline tick
+    g.append(sv("rect", { x: (i * step + 1).toFixed(1), y: (H - hgt).toFixed(1), width: bw.toFixed(1), height: hgt.toFixed(1), rx: 1.5, fill: v > 0 ? color : "rgba(255,255,255,.10)" }));
+  });
+  return g;
+}
+function areaChart(series) {                           // tickets per minute, escalated share on top in red
+  const W = 1000, H = 230, L = 40, B = 26, T = 12, max = Math.max(1, ...series.map((p) => p.requests));
+  const x = (i) => L + ((W - L - 8) * i) / (series.length - 1), y = (v) => T + (H - T - B) * (1 - v / max);
+  const area = (get) => "M" + x(0) + "," + y(0) + " " + series.map((p, i) => "L" + x(i).toFixed(1) + "," + y(get(p)).toFixed(1)).join(" ") + " L" + x(series.length - 1) + "," + y(0) + " Z";
+  const g = sv("svg", { viewBox: "0 0 " + W + " " + H, class: "flow", role: "img", "aria-label": "Tickets per minute over the last 30 minutes" });
+  for (const f of [0, 0.5, 1]) g.append(sv("line", { x1: L, x2: W - 8, y1: y(max * f), y2: y(max * f), stroke: "rgba(255,255,255,.08)" }), label(L - 8, y(max * f) + 4, Math.round(max * f), "end"));
+  g.append(sv("path", { d: area((p) => p.requests), fill: hexA(COLOR.info, 0.28), stroke: COLOR.info, "stroke-width": 2 }), sv("path", { d: area((p) => p.escalations), fill: hexA(COLOR.danger, 0.55), stroke: COLOR.danger, "stroke-width": 1.5 }));
+  series.forEach((p, i) => { if (p.requests) g.append(sv("circle", { cx: x(i), cy: y(p.requests), r: 3, fill: COLOR.info }, sv("title", {}, p.minutes_ago + " min ago: " + p.requests + " tickets, " + p.escalations + " escalated"))); });
+  g.append(label(L, H - 6, "30 min ago"), label((L + W) / 2, H - 6, "15 min ago", "middle"), label(W - 8, H - 6, "now", "end"));
+  return g;
+}
+function donut(entries, centre, sub) {                 // entries: [{label, value, color}]
+  const S = 180, R = 66, C = 2 * Math.PI * R, total = entries.reduce((a, e) => a + e.value, 0);
+  const g = sv("svg", { viewBox: "0 0 " + S + " " + S, role: "img", "aria-label": entries.map((e) => e.label + " " + e.value).join(", ") });
+  g.append(sv("circle", { cx: S / 2, cy: S / 2, r: R, fill: "none", stroke: "rgba(255,255,255,.07)", "stroke-width": 22 }));
+  let done = 0;
+  for (const e of entries) {
+    if (!e.value || !total) continue;
+    const len = (C * e.value) / total;
+    g.append(sv("circle", { cx: S / 2, cy: S / 2, r: R, fill: "none", stroke: e.color, "stroke-width": 22, "stroke-dasharray": Math.max(0, len - 1.5) + " " + (C - Math.max(0, len - 1.5)), "stroke-dashoffset": -done,
+      transform: "rotate(-90 " + S / 2 + " " + S / 2 + ")" }, sv("title", {}, e.label + ": " + e.value + " (" + pct(e.value / total) + ")")));
+    done += len;
+  }
+  g.append(sv("text", { x: S / 2, y: S / 2 + 2, "text-anchor": "middle", fill: "#fff", "font-size": 30, "font-weight": 700, "font-family": "Roboto, Segoe UI, Arial, sans-serif" }, centre),
+    sv("text", { x: S / 2, y: S / 2 + 22, "text-anchor": "middle", fill: "#9a9aa3", "font-size": 11, "font-family": "Roboto, Segoe UI, Arial, sans-serif" }, sub));
+  return g;
+}
+function donutWithKeys(node, entries, centre, sub) {
+  const total = entries.reduce((a, e) => a + e.value, 0), shown = entries.filter((e) => e.value).sort((a, b) => b.value - a.value);
+  clear(node).append(donut(shown, centre, sub), h("div", { class: "keys" }, shown.length
+    ? shown.map((e) => h("div", {}, h("i", { style: "background:" + e.color }), h("span", { text: e.label }), h("span", { class: "v", text: String(e.value) }), h("span", { class: "p", text: pct(e.value / total) })))
+    : h("p", { class: "small muted", text: "No tickets yet. Classify one, or send the sample tickets." })));
+}
+function gauge(value, budget) {                        // p95 on a log scale from 1 ms to 2,000 ms, with the budget marked
+  const W = 320, H = 190, cx = 160, cy = 165, R = 120, top = Math.log10(2000);
+  const frac = (ms) => Math.max(0, Math.min(1, Math.log10(Math.max(1, ms)) / top));
+  const pt = (f, r) => [cx - r * Math.cos(Math.PI * f), cy - r * Math.sin(Math.PI * f)];
+  const arc = (f0, f1, color, width) => { const [x0, y0] = pt(f0, R), [x1, y1] = pt(f1, R); return sv("path", { d: "M" + x0.toFixed(1) + "," + y0.toFixed(1) + " A" + R + "," + R + " 0 0 1 " + x1.toFixed(1) + "," + y1.toFixed(1), fill: "none", stroke: color, "stroke-width": width, "stroke-linecap": "round" }); };
+  const g = sv("svg", { viewBox: "0 0 " + W + " " + H, class: "flow", style: "max-width:22rem;margin:0 auto", role: "img", "aria-label": "p95 latency " + value + " ms against a budget of " + budget + " ms" });
+  g.append(arc(0, frac(250), hexA(COLOR.ok, 0.35), 16), arc(frac(250), frac(budget), hexA(COLOR.warn, 0.4), 16), arc(frac(budget), 1, hexA(COLOR.danger, 0.45), 16));
+  const colour = value < 250 ? COLOR.ok : value < budget ? COLOR.warn : COLOR.danger;
+  if (value > 0) g.append(arc(0, Math.max(0.012, frac(value)), colour, 16));
+  for (const t of [1, 10, 100, 1000]) { const [x, y] = pt(frac(t), R + 20); g.append(label(x, y + 4, t === 1000 ? "1 s" : t + " ms", "middle", 10)); }
+  const [mx, my] = pt(frac(value), R);
+  if (value > 0) g.append(sv("circle", { cx: mx, cy: my, r: 7, fill: "#fff", stroke: colour, "stroke-width": 3 }));
+  g.append(sv("text", { x: cx, y: cy - 38, "text-anchor": "middle", fill: "#fff", "font-size": 30, "font-weight": 700, "font-family": "Roboto, Segoe UI, Arial, sans-serif" }, value ? value.toFixed(1) + " ms" : "n/a"),
+    sv("text", { x: cx, y: cy - 20, "text-anchor": "middle", fill: "#9a9aa3", "font-size": 11, "font-family": "Roboto, Segoe UI, Arial, sans-serif" }, value ? Math.round(budget / value) + " times inside the budget" : "no requests yet"));
+  return g;
+}
+function lineChart(series, valueOf) {                  // one value per minute
+  const W = 600, H = 150, L = 38, B = 22, T = 8, vals = series.map(valueOf), max = Math.max(1, ...vals.filter((v) => v != null)) * 1.15;
+  const y = (v) => T + (H - T - B) * (1 - v / max), step = (W - L) / series.length;
+  const g = sv("svg", { viewBox: "0 0 " + W + " " + H, class: "flow", role: "img" });
+  for (const f of [0, 0.5, 1]) g.append(sv("line", { x1: L, x2: W, y1: y(max * f), y2: y(max * f), stroke: "rgba(255,255,255,.08)" }), label(L - 6, y(max * f) + 4, max * f >= 10 ? Math.round(max * f) : (max * f).toFixed(1), "end"));
+  let path = "", pen = false;
+  vals.forEach((v, i) => {
+    if (v == null) { pen = false; return; }
+    const x = L + i * step + step / 2;
+    path += (pen ? " L" : " M") + x.toFixed(1) + "," + y(v).toFixed(1); pen = true;
+    g.append(sv("circle", { cx: x, cy: y(v), r: 3, fill: COLOR.accent }, sv("title", {}, series[i].minutes_ago + " min ago: " + v + " ms")));
+  });
+  if (path) g.append(sv("path", { d: path, fill: "none", stroke: COLOR.accent, "stroke-width": 2 }));
+  g.append(label(L, H - 6, "30 min ago"), label(W, H - 6, "now", "end"));
+  return g;
+}
+function confidenceChart(hist) {                       // ten bars, coloured by how far the answer can be trusted
+  const W = 520, H = 200, L = 34, B = 30, T = 10, max = Math.max(1, ...hist.map((b) => b.count)), step = (W - L) / hist.length, y = (v) => T + (H - T - B) * (1 - v / max);
+  const g = sv("svg", { viewBox: "0 0 " + W + " " + H, class: "flow", role: "img", "aria-label": "Distribution of confidence" });
+  for (const f of [0, 0.5, 1]) g.append(sv("line", { x1: L, x2: W, y1: y(max * f), y2: y(max * f), stroke: "rgba(255,255,255,.08)" }), label(L - 6, y(max * f) + 4, Math.round(max * f), "end"));
+  hist.forEach((b, i) => {
+    const colour = i < 3 ? COLOR.danger : i < 7 ? COLOR.warn : COLOR.ok, x = L + i * step + 4;
+    g.append(sv("rect", { x, y: b.count ? y(b.count) : y(0) - 1, width: step - 8, height: b.count ? y(0) - y(b.count) : 1, rx: 5, fill: b.count ? colour : "rgba(255,255,255,.12)" }, sv("title", {}, "confidence " + b.bin + ": " + b.count + " tickets")),
+      label(x + (step - 8) / 2, H - 12, (i / 10).toFixed(1), "middle", 10));
+    if (b.count) g.append(label(x + (step - 8) / 2, y(b.count) - 5, b.count, "middle", 10, "#fff"));
+  });
+  return g;
+}
+function heatmap(table, matrix) {                      // products down, fault categories across
+  clear(table);
+  const rows = PRODUCTS.concat(Object.keys(matrix).filter((p) => !PRODUCTS.includes(p))), max = Math.max(1, ...rows.flatMap((p) => Object.values(matrix[p] || {})));
+  table.append(h("tr", {}, h("th", {}), CATS.map((c) => h("th", { title: pretty(c), text: CAT_SHORT[c] })), h("th", { text: "Total" })));
+  for (const p of rows) {
+    const row = matrix[p] || {}, total = Object.values(row).reduce((a, b) => a + b, 0);
+    table.append(h("tr", {}, h("th", { class: "rowh", text: words(p) }), CATS.map((c) => { const v = row[c] || 0;
+      return h("td", { title: words(p) + ", " + pretty(c) + ": " + v, text: v ? String(v) : "", style: v ? "background:" + hexA(CAT_COLOR[c], 0.22 + 0.68 * (v / max)) : "" }); }),
+      h("th", { style: "color:var(--text)", text: String(total) })));
+  }
+}
+function kpi(caption, value, sub, color, trend, axis) {
+  return h("div", { class: "kpi", style: "--k:" + color }, h("div", { class: "cap" }, h("i", {}), caption), h("b", { text: value }), h("div", { class: "sub", text: sub }), miniBars(trend, color), h("div", { class: "axis" }, h("span", { text: axis[0] }), h("span", { text: axis[1] })));
+}
+function ago(sec) { return sec < 90 ? sec + " s ago" : sec < 5400 ? Math.round(sec / 60) + " min ago" : (sec / 3600).toFixed(1) + " h ago"; }
+
+// ---------- dashboard: live operational view ----------
+let live = null;
+async function loadMetrics() {
+  try {
+    const r = await fetchWithTimeout("/metrics", 5000);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    live = await r.json();
+    if (!live.throughput || !live.product_by_category) throw new Error("the service is running older code; restart it");
+  } catch (e) { $("live-stamp").textContent = "could not refresh (" + (e.name === "AbortError" ? "timed out" : e.message) + "), retrying"; return; }
+  const m = live, L = m.latency_ms, n = m.window, pm = m.per_minute;
+  $("live-stamp").textContent = "updated " + new Date().toLocaleTimeString();
+  clear($("dash-kpis")).append(
+    kpi("Tickets handled", String(m.requests), m.throughput.per_minute_last_5_min.toFixed(1) + " per minute over the last 5 min", COLOR.info, pm.map((p) => p.requests), ["30 min ago", "now"]),
+    kpi("Need a person", n ? pct(m.escalation.rate) : "n/a", m.escalation.count + " of the last " + n + " escalated", COLOR.danger, pm.map((p) => p.escalations), ["30 min ago", "now"]),
+    kpi("Speed, p95", n ? L.p95.toFixed(1) + " ms" : "n/a", m.within_budget == null ? "budget 1,000 ms" : pct(m.within_budget) + " answered within 1,000 ms", COLOR.ok, pm.map((p) => p.p95_ms), ["30 min ago", "now"]),
+    kpi("Confident answers", n ? pct(1 - m.confidence.low_share) : "n/a", "confidence of " + m.confidence.low_threshold + " or more", COLOR.violet, m.confidence.histogram.map((b) => b.count), ["confidence 0", "1"]));
+  clear($("dash-series")).append(areaChart(pm));
+  donutWithKeys($("dash-cats"), CATS.map((c) => ({ label: pretty(c), value: m.by_category[c] || 0, color: catColor(c) })), String(n), n === 1 ? "ticket" : "tickets");
+  const groups = {};
+  for (const [rule, count] of Object.entries(m.by_rule)) { const g = PATH_GROUP[rule] || "Low-confidence guess"; groups[g] = (groups[g] || 0) + count; }
+  const byRule = (groups["Safety rule"] || 0) + (groups["Other business rule"] || 0);
+  donutWithKeys($("dash-paths"), Object.keys(PATH_COLOR).map((g) => ({ label: g, value: groups[g] || 0, color: PATH_COLOR[g] })), n ? pct(byRule / n) : "n/a", "decided by a rule");
+  heatmap($("dash-heat"), m.product_by_category);
+  clear($("dash-gauge")).append(gauge(n ? L.p95 : 0, m.latency_budget_ms));
+  clear($("dash-p95")).append(lineChart(pm, (p) => p.p95_ms));
+  clear($("dash-conf")).append(confidenceChart(m.confidence.histogram));
+  clear($("dash-esc")).append(tile(String(m.escalation.count), "escalated of " + n), tile(String(m.escalation.c1_safety), "rule C1, safety mention"), tile(String(m.escalation.c2_gas_smell), "rule C2, gas smell"));
+  const recent = clear($("dash-recent"));
+  if (!m.recent_escalations.length) recent.append(h("li", { style: "grid-template-columns:1fr" }, h("span", { class: "muted", text: "No escalations yet." })));
+  for (const e of m.recent_escalations) recent.append(h("li", {}, h("span", { class: "tag red", text: e.rule }), h("span", {}, h("b", { style: "color:var(--text)", text: pretty(e.category) }), h("span", { class: "muted", text: "  on " + words(e.product) })), h("span", { class: "tiny muted mono", text: ago(e.seconds_ago) })));
+  const q = m.input_quality, item = (k, v) => h("span", {}, k + " ", h("b", { text: v }));
+  clear($("dash-quality")).append(item("Requests rejected", String(q.rejected_requests)), item("Safe-fallback answers", String(q.fallback_answers)), item("Age not given", pct(q.age_unknown_share)), item("Product not recognised", pct(q.product_unrecognised_share)),
+    item("Median speed", L.p50.toFixed(1) + " ms"), item("p99", L.p99.toFixed(1) + " ms"));
+  if (m.model) $("footer").textContent = "Runs fully offline. No external requests. Mode: " + (m.model.mode || "") + (m.model.created ? ". Model trained " + m.model.created + " on " + m.model.n_sentences + " sentences." : ".");
+}
+$("dash-demo").addEventListener("click", async () => {
+  const btn = $("dash-demo"); btn.disabled = true;
+  for (let i = 0; i < 40; i++) {
+    const ex = EXAMPLES[i % EXAMPLES.length][1];
+    btn.textContent = "Sending " + (i + 1) + " of 40";
+    try { await classifyOne({ ticket_id: "demo-" + i, ...ex, product_age_days: i % 5 === 0 ? null : ex.product_age_days }); } catch (e) { break; }
+  }
+  btn.disabled = false; btn.textContent = "Send 40 sample tickets"; loadMetrics();
+});
+
+// ---------- evals: the stored offline scorecard ----------
+let scorecard = null;
+for (const a of document.querySelectorAll(".subnav a")) a.addEventListener("click", (e) => {      // jump within the tab without changing the address
+  e.preventDefault(); const target = $(a.getAttribute("href").slice(1)); if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+const txt = (x, y, s, anchor, size, fill) => sv("text", { x, y, "text-anchor": anchor || "start", fill: fill || "#a0a0a0", "font-size": size || 11, "font-family": "Consolas, monospace" }, s);
+function schemesChart(schemes) {                       // horizontal bars on a 0.5 to 1.0 axis, with CI whiskers
+  const W = 720, rowH = 46, L = 250, R = 70, lo = 0.5, hi = 1.0, H = schemes.length * rowH + 30, x = (v) => L + (W - L - R) * (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo);
+  const g = sv("svg", { viewBox: "0 0 " + W + " " + H, class: "flow", role: "img", "aria-label": "Macro-F1 by validation scheme" });
+  for (const v of [0.5, 0.6, 0.7, 0.8, 0.9, 1.0]) g.append(sv("line", { x1: x(v), x2: x(v), y1: 0, y2: H - 22, stroke: "rgba(255,255,255,.1)" }), txt(x(v), H - 6, v.toFixed(1), "middle"));
+  schemes.forEach((s, i) => {
+    const y = i * rowH + 8;
+    g.append(txt(0, y + 13, s.title.slice(0, 34), "start", 12, "#ffffff"), txt(0, y + 28, s.tickets + " tickets", "start", 10),
+      sv("rect", { x: L, y: y + 3, width: Math.max(1, x(s.macro_f1) - L), height: 20, rx: 3, fill: i === 0 ? "rgba(255,107,53,.55)" : "#ff6b35" }),
+      sv("line", { x1: x(s.macro_f1_ci95[0]), x2: x(s.macro_f1_ci95[1]), y1: y + 13, y2: y + 13, stroke: "#ffffff", "stroke-width": 2 }),
+      sv("line", { x1: x(s.macro_f1_ci95[0]), x2: x(s.macro_f1_ci95[0]), y1: y + 8, y2: y + 18, stroke: "#ffffff", "stroke-width": 2 }),
+      sv("line", { x1: x(s.macro_f1_ci95[1]), x2: x(s.macro_f1_ci95[1]), y1: y + 8, y2: y + 18, stroke: "#ffffff", "stroke-width": 2 }),
+      txt(W - R + 8, y + 18, fmt(s.macro_f1), "start", 14, "#ffffff"));
+  });
+  return g;
+}
+function reliabilityChart(points) {                    // stated confidence (x) against measured accuracy (y)
+  const S = 300, P = 34, m = (v) => P + (S - P - 10) * v, my = (v) => S - P - (S - P - 10) * v, maxN = Math.max(...points.map((p) => p.n));
+  const g = sv("svg", { viewBox: "0 0 " + S + " " + S, class: "flow", style: "max-width:22rem", role: "img", "aria-label": "Reliability diagram" });
+  for (const v of [0, 0.5, 1]) g.append(sv("line", { x1: m(0), x2: m(1), y1: my(v), y2: my(v), stroke: "rgba(255,255,255,.1)" }), sv("line", { x1: m(v), x2: m(v), y1: my(0), y2: my(1), stroke: "rgba(255,255,255,.1)" }),
+    txt(m(0) - 6, my(v) + 4, v.toFixed(1), "end"), txt(m(v), S - P + 14, v.toFixed(1), "middle"));
+  g.append(sv("line", { x1: m(0), y1: my(0), x2: m(1), y2: my(1), stroke: "#808080", "stroke-dasharray": "4 4" }), txt(m(0.5), S - 4, "stated confidence", "middle"),
+    sv("text", { x: 10, y: my(0.5), transform: "rotate(-90 10 " + my(0.5) + ")", "text-anchor": "middle", fill: "#a0a0a0", "font-size": 11, "font-family": "Consolas, monospace" }, "measured accuracy"));
+  for (const p of points) g.append(sv("circle", { cx: m(p.confidence), cy: my(p.accuracy), r: 4 + 9 * Math.sqrt(p.n / maxN), fill: "rgba(255,107,53,.6)", stroke: "#ff6b35" }, sv("title", {}, "confidence " + p.bin + ": stated " + p.confidence + ", accuracy " + p.accuracy + ", " + p.n + " tickets")));
+  return g;
+}
+function seriesChart(xLabels, series, lo, hi, xTitle) {  // one or more lines on a shared axis, with a legend
+  const W = 520, H = 250, L = 40, B = 46, T = 10, R = 12, x = (i) => L + (W - L - R) * (xLabels.length === 1 ? 0.5 : i / (xLabels.length - 1)), y = (v) => T + (H - T - B) * (1 - (v - lo) / (hi - lo));
+  const g = sv("svg", { viewBox: "0 0 " + W + " " + H, class: "flow", role: "img" });
+  for (let k = 0; k <= 4; k++) { const v = lo + (hi - lo) * k / 4; g.append(sv("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: "rgba(255,255,255,.1)" }), txt(L - 6, y(v) + 4, v.toFixed(2), "end")); }
+  xLabels.forEach((l, i) => g.append(txt(x(i), H - B + 16, l, "middle")));
+  g.append(txt((L + W - R) / 2, H - B + 32, xTitle, "middle"));
+  series.forEach((s, k) => {
+    g.append(sv("path", { d: s.values.map((v, i) => (i ? "L" : "M") + x(i).toFixed(1) + "," + y(v).toFixed(1)).join(" "), fill: "none", stroke: s.color, "stroke-width": 2 }));
+    s.values.forEach((v, i) => g.append(sv("circle", { cx: x(i), cy: y(v), r: 3.5, fill: s.color }, sv("title", {}, s.name + " at " + xLabels[i] + ": " + fmt(v))), txt(x(i), y(v) - 8, fmt(v, 2), "middle", 10, "#ffffff")));
+    g.append(sv("rect", { x: L + k * 190, y: H - 10, width: 12, height: 4, fill: s.color }), txt(L + k * 190 + 18, H - 5, s.name));
+  });
+  return g;
+}
+const GATE_NAMES = { safety_recall: "Escalation recall", false_escalation: "Specificity (no false escalations)", c6_confidence: "Non-complaint confidence stays low", macro_f1_seen: "Macro-F1, seen wording", macro_f1_unseen: "Macro-F1, unseen wording",
+  macro_f1_seed_only: "Macro-F1, hand-written training", two_symptom_accuracy: "Two-symptom accuracy", calibration_ece: "Calibration error", confidence_auroc: "Confidence separates right from wrong",
+  noise_5pct_macro_f1: "Macro-F1 with 5% typos", noise_5pct_escalation_recall: "Escalation recall with 5% typos", latency_p95_ms: "p95 latency, ms", train_seconds: "Training time, s" };
+const KEY_GATES = ["safety_recall", "false_escalation", "macro_f1_unseen", "latency_p95_ms"];      // the four a reader should look at first
+async function loadScorecard() {
+  if (scorecard) return;
+  try { scorecard = await (await fetch("/scorecard", { cache: "no-store" })).json(); } catch (e) { scorecard = { available: false }; }
+  const has = !!scorecard.schemes; $("sc-missing").hidden = has; $("sc-body").hidden = !has;
+  if (!has) return;
+  const S = scorecard.schemes, A = S.A_seen_wording, B = S.B_unseen_wording, C = S.C_seed_only, E = B.escalation, CF = B.confidence;
+  const gates = Object.entries(scorecard.gates), passed = gates.filter(([, g]) => g.pass).length, allPass = passed === gates.length;
+  const verdict = clear($("ev-verdict")); verdict.className = "verdict " + (allPass ? "good" : "bad");
+  verdict.append(h("span", { class: "tag " + (allPass ? "green" : "red"), text: allPass ? "All gates pass" : "Gate failure" }),
+    h("span", { text: passed + " of " + gates.length + " release gates pass. Model trained " + scorecard.model.created + " on " + scorecard.model.n_tickets + " tickets and " + scorecard.model.n_sentences + " sentences." }));
+  clear($("ev-tiles")).append(tile(fmt(B.macro_f1), "macro-F1, unseen wording"), tile(fmt(C.macro_f1), "macro-F1, hand-written training only"), tile(pct(E.recall), "escalation recall"),
+    tile(String(E.fp), "false escalations"), tile(fmt(CF.ece), "calibration error (ECE)"), tile(A.latency_ms.p95.toFixed(1) + " ms", "p95 latency, offline"));
+
+  clear($("ev-schemes-chart")).append(schemesChart(Object.values(S)));
+  fillTable($("sc-schemes"), [{ t: "Validation scheme" }, { t: "Tickets", num: true }, { t: "Macro-F1", num: true }, { t: "95% CI", num: true }, { t: "Weighted F1", num: true }, { t: "Accuracy", num: true }, { t: "Bal. acc.", num: true }, { t: "Kappa", num: true }, { t: "MCC", num: true }, { t: "Esc. recall", num: true }, { t: "False esc.", num: true }, { t: "ECE", num: true }, { t: "Brier", num: true }],
+    Object.values(S).map((s) => ({ cells: [h("span", {}, h("b", { text: s.title }), h("div", { class: "tiny muted", text: s.note })), s.tickets, fmt(s.macro_f1), "[" + fmt(s.macro_f1_ci95[0]) + ", " + fmt(s.macro_f1_ci95[1]) + "]", fmt(s.weighted_f1), fmt(s.accuracy), fmt(s.balanced_accuracy), fmt(s.cohen_kappa), fmt(s.mcc), fmt(s.escalation.recall), s.escalation.fp, fmt(s.confidence.ece), fmt(s.confidence.brier)] })));
+  $("ev-gap").textContent = "The drop from A to B is " + fmt(scorecard.generalisation_gap.A_minus_B) + " and from B to C is " + fmt(scorecard.generalisation_gap.B_minus_C) + "; expect a further drop on unseen real-world tickets.";
+
+  const cell = (v, colour) => h("div", { class: "actions", style: "gap:.5rem;flex-wrap:nowrap;justify-content:flex-end" }, h("div", { class: "meter", style: "width:5rem" }, h("i", { style: "width:" + Math.round(v * 100) + "%;background:" + (v < 0.9 ? COLOR.warn : colour) })), h("span", { class: "mono", text: fmt(v) }));
+  const named = (c) => h("span", { style: "display:inline-flex;align-items:center;gap:.5rem" }, h("i", { style: "width:.625rem;height:.625rem;border-radius:50%;background:" + catColor(c) }), pretty(c));
+  fillTable($("sc-classes"), [{ t: "Category" }, { t: "Precision", num: true }, { t: "Recall", num: true }, { t: "F1", num: true }, { t: "Tickets", num: true }],
+    B.per_class.map((c) => ({ cells: [named(c.label), cell(c.precision, COLOR.info), cell(c.recall, COLOR.violet), cell(c.f1, COLOR.accent), c.support] }))
+      .concat([{ cells: [h("b", { text: "macro average" }), cell(B.macro_precision, COLOR.info), cell(B.macro_recall, COLOR.violet), cell(B.macro_f1, COLOR.accent), B.tickets] }]));
+  const conf = B.top_confusions || [], cmax = Math.max(1, ...conf.map((c) => c.count));
+  clear($("ev-confusions")).append(...(conf.length ? conf.map((c) => barRow(pretty(c.true) + " → " + pretty(c.predicted), c.count, cmax, null, COLOR.danger)) : [h("p", { class: "small muted", text: "No confusions." })]));
+  $("ev-confusions").classList.add("wide");
+  const cm = clear($("sc-cm")), L = scorecard.labels, short = (s) => CAT_SHORT[s] || s;
+  cm.append(h("tr", {}, h("th", {}), L.map((l) => h("th", { title: l, text: short(l) }))));
+  B.confusion_matrix.forEach((row, i) => { const tot = Math.max(1, row.reduce((a, b) => a + b, 0));
+    cm.append(h("tr", {}, h("th", { style: "text-align:right;white-space:nowrap", text: short(L[i]), title: L[i] }), row.map((v, j) => h("td", { title: L[i] + " predicted as " + L[j] + ": " + v, text: v ? String(v) : "",
+      style: "color:#fff;background:" + (v ? (i === j ? "rgba(62,207,142," : "rgba(255,77,79,") + (0.15 + 0.75 * v / tot).toFixed(2) + ")" : "#141414") })))); });
+
+  $("ev-caught").textContent = E.tp + " / " + (E.tp + E.fn);
+  clear($("ev-esc")).append(tile(pct(E.recall), "recall"), tile(pct(E.precision), "precision"), tile(pct(E.specificity), "specificity"), tile(fmt(E.f2), "F2, recall-weighted"));
+  clear($("ev-family")).append(...(E.by_family || []).map((f) => barRow(f.family, f.recall, 1, f.caught + " / " + f.tickets, f.recall >= 1 ? COLOR.ok : COLOR.warn)));
+
+  clear($("ev-conf")).append(tile(fmt(CF.ece), "expected calibration error"), tile(fmt(CF.mce), "maximum calibration error"), tile(fmt(CF.brier), "Brier score"), tile(fmt(CF.auroc), "AUROC, right against wrong"));
+  clear($("sc-rel")).append(reliabilityChart(CF.reliability));
+  const rc = CF.risk_coverage || [];
+  clear($("ev-cov")).append(seriesChart(rc.map((r) => Math.round(r.coverage * 100) + "%"), [{ name: "accuracy", color: "#ff6b35", values: rc.map((r) => r.accuracy) }], Math.min(0.9, ...rc.map((r) => r.accuracy)) - 0.02, 1.0, "share of tickets answered automatically"));
+
+  for (const key of ["product", "decision_path", "text_length", "symptom_count"]) {
+    const rows = (B.slices || {})[key] || [];
+    clear($("ev-slice-" + key)).append(...rows.map((s) => barRow((key === "decision_path" ? (PATH_NAME[s.slice] || s.slice) : words(s.slice.replace(/^\d\. /, ""))) + " (" + s.tickets + ")", s.accuracy, 1, fmt(s.accuracy), s.accuracy < 0.9 ? COLOR.warn : COLOR.info)));
+    $("ev-slice-" + key).classList.add("wide");
+  }
+
+  const noise = Object.entries(scorecard.noise_on_B);
+  clear($("sc-noise")).append(seriesChart(["0%"].concat(noise.map(([k]) => k)), [{ name: "macro-F1", color: "#ff6b35", values: [B.macro_f1].concat(noise.map(([, v]) => v.macro_f1)) },
+    { name: "escalation recall", color: "#3ecf8e", values: [E.recall].concat(noise.map(([, v]) => v.escalation_recall)) }], 0.6, 1.0, "share of letters corrupted"));
+  const mc = scorecard.model, row = (k, v) => [h("dt", { text: k }), h("dd", { class: "mono", text: String(v) })];
+  clear($("ev-model")).append(...[row("Trained", mc.created), row("Tickets", mc.n_tickets), row("Training sentences", mc.n_sentences), row("Symptom wordings", mc.n_templates), row("Training time", mc.train_seconds + " s")].flat());
+
+  clear($("sc-gates")).append(...gates.slice().sort((a, b) => (a[1].pass - b[1].pass) || (KEY_GATES.includes(b[0]) - KEY_GATES.includes(a[0]))).map(([k, g]) => h("div", { class: "gate " + (g.pass ? "pass" : "fail") + (KEY_GATES.includes(k) ? " key" : "") },
+    h("div", { class: "actions", style: "justify-content:space-between;flex-wrap:nowrap" }, h("span", { class: "small", style: "color:var(--text)", text: GATE_NAMES[k] || k }), h("span", { class: "tag " + (g.pass ? "green" : "red"), text: g.pass ? "Pass" : "Fail" })),
+    h("div", { class: "mono", style: "margin-top:.375rem" }, h("b", { style: "font-size:1.25rem;color:var(--text)", text: String(g.value) }), h("span", { class: "tiny muted", text: "   limit " + g.limit })))));
+}
+
+// ---------- how it works: one ticket, eight stages, with a marked-up complaint and what-if controls ----------
+let howShown = 0, howBase = null, howPrev = null;
+const HOW_MAX_CARDS = 12;
+const HOW_TITLES = ["Input", "Clean-up", "Safety scan", "Sentence split", "Sentence classifier", "Symptoms found", "Rule ladder", "Answer"];
+const RULE_NAMES = { C1: "C1 safety", C3: "C3 installation", C4: "C4 error code", C5: "C5 two symptoms", C6: "C6 not a complaint", model: "Single symptom", weak: "Weak guess", empty: "No text", fallback: "Fallback" };
+// category names and colours come from the shared table near the top of this script
+
+
+for (const [label, ex] of EXAMPLES) {
+  const chip = h("button", { class: "chip", type: "button", text: label });
+  chip.addEventListener("click", () => { $("how-product").value = ex.product_category; $("how-age").value = ex.product_age_days; $("how-text").value = ex.complaint_text; runTrace(true); });
+  $("how-examples").append(chip);
+}
+$("how-copy").addEventListener("click", () => { $("how-product").value = $("product_category").value; $("how-age").value = $("product_age_days").value; $("how-text").value = $("complaint_text").value; });
+$("how-form").addEventListener("submit", (e) => { e.preventDefault(); runTrace(true); });
+$("how-next").addEventListener("click", () => revealTo(howShown + 1, true));
+$("how-back").addEventListener("click", () => revealTo(howShown - 1, false));
+$("how-all").addEventListener("click", () => revealTo(8, false));
+HOW_TITLES.forEach((title, i) => {
+  const b = h("button", { type: "button", class: "railstep", title: "Go to stage " + (i + 1) }, h("span", { class: "mono", text: String(i + 1) }), h("span", { text: " " + title }));
+  b.addEventListener("click", () => revealTo(i + 1, true)); $("how-rail").append(b);
+});
+for (const b of document.querySelectorAll("#view-how [data-age]")) b.addEventListener("click", () => { $("how-age").value = b.dataset.age; runTrace(false); });
+for (const b of document.querySelectorAll("#view-how [data-product]")) b.addEventListener("click", () => { $("how-product").value = b.dataset.product; runTrace(false); });
+for (const b of document.querySelectorAll("#view-how [data-add]")) b.addEventListener("click", () => { if (!$("how-text").value.includes(b.dataset.add.trim())) $("how-text").value = $("how-text").value.trim() + b.dataset.add; runTrace(false); });
+$("how-reset").addEventListener("click", () => { if (!howBase) return; $("how-product").value = howBase.product_category; $("how-age").value = howBase.product_age_days ?? ""; $("how-text").value = howBase.complaint_text; runTrace(false); });
+document.addEventListener("keydown", (e) => {
+  if ($("view-how").hidden || $("how-out").hidden || ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) return;
+  if (e.key === "ArrowRight") revealTo(howShown + 1, true); else if (e.key === "ArrowLeft") revealTo(howShown - 1, false);
+});
+function revealTo(n, scroll) {
+  howShown = Math.max(1, Math.min(8, n));
+  const stages = [...document.querySelectorAll("#how-stages .stage")];
+  stages.forEach((s, i) => (s.hidden = i >= howShown));
+  $("how-pos").textContent = "Stage " + howShown + " of 8";
+  [...$("how-rail").children].forEach((b, i) => { b.classList.toggle("done", i < howShown); b.classList.toggle("now", i === howShown - 1); });
+  $("how-back").disabled = howShown <= 1; $("how-next").disabled = howShown >= 8;
+  $("how-next").textContent = howShown >= 8 ? "Done" : "Next: " + HOW_TITLES[howShown];
+  if (scroll && stages[howShown - 1]) stages[howShown - 1].scrollIntoView({ behavior: "smooth", block: "center" });
+}
+function stage(n, what, ...kids) {
+  const kind = { 3: "safety", 5: "model", 7: "rules", 8: "answer" }[n] || "";
+  return h("section", { class: "stage", hidden: "", "data-kind": kind }, h("header", {}, h("span", { class: "n", text: String(n) }), h("h2", { text: HOW_TITLES[n - 1] })), h("p", { class: "what", text: what }), kids);
+}
+function pair(label, node) { return [h("dt", { text: label }), h("dd", {}, node)]; }
+function chipsOf(items, cls) { return h("div", { class: "chips", style: "margin-top:0" }, items.length ? items.map((t) => h("span", { class: "tag " + (cls || ""), text: t })) : h("span", { class: "small muted", text: "none" })); }
+
+async function runTrace(fresh) {
+  const age = $("how-age").value.trim();
+  const req = { ticket_id: "T-trace", product_category: $("how-product").value, complaint_text: $("how-text").value, product_age_days: age === "" ? null : Number(age) };
+  const btn = $("how-run"); btn.disabled = true; btn.textContent = "Tracing"; $("how-error").hidden = true;
+  try {
+    const r = await fetch("/explain", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req) });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const data = await r.json();
+    if (!data.trace_available) throw new Error("no trace is available for this ticket (the service is running on safety rules only)");
+    const before = fresh ? null : howPrev;
+    if (fresh || !howBase) howBase = req;
+    drawTrace(req, data.response, data.trace); drawDiff(before, data.response, data.trace);
+    howPrev = { out: data.response, rule: data.trace.confidence.rule };
+    $("how-out").hidden = false; revealTo(fresh ? 1 : Math.max(howShown, 1), false);
+    if (fresh) $("how-out").scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (err) { $("how-out").hidden = true; $("how-error").hidden = false; $("how-error").textContent = "Could not trace this ticket: " + err.message + "."; }
+  btn.disabled = false; btn.textContent = "Trace it";
+}
+function drawDiff(before, out, t) {
+  const node = clear($("how-diff"));
+  if (!before) { node.append("Use a control above to change the ticket."); node.className = "diff muted"; return; }
+  const rule = t.confidence.rule, parts = [];
+  if (before.out.fault_category !== out.fault_category) parts.push("category " + before.out.fault_category + " → " + out.fault_category);
+  if (before.rule !== rule) parts.push("deciding rule " + (RULE_NAMES[before.rule] || before.rule) + " → " + (RULE_NAMES[rule] || rule));
+  if (before.out.escalate !== out.escalate) parts.push("escalate " + before.out.escalate + " → " + out.escalate);
+  if (Math.abs(before.out.confidence - out.confidence) >= 0.005) parts.push("confidence " + fmt(before.out.confidence, 2) + " → " + fmt(out.confidence, 2));
+  node.className = "diff" + (parts.length ? " changed" : " muted");
+  node.append(parts.length ? "Changed: " + parts.join("; ") + "." : "Nothing changed: same category, rule, escalation and confidence.");
+}
+function summarise(out, t) {
+  const rule = t.confidence.rule, found = Object.keys(t.symptoms.found), s = t.safety;
+  let text;
+  if (rule === "C1") text = "The complaint reports " + s.c1_terms.join(" and ") + ", so rule C1 makes it an electrical fault and escalates it. The classifier was not needed.";
+  else if (rule === "C5") text = "Two symptoms were found (" + found.slice(0, 2).join(" and ") + "). Rule C5 picks the one earlier in the taxonomy, " + out.fault_category + ", and lowers the confidence.";
+  else if (rule === "C3") text = "The product is " + t.cleanup.age + " days old and an installation problem was found, so rule C3 makes it installation_or_setup.";
+  else if (rule === "C4") text = "Only an error code (" + t.symptoms.error_code + ") was found, with no symptom, so rule C4 gives control_panel_or_display.";
+  else if (rule === "C6") text = "Nothing in the text reads as a symptom, so rule C6 treats it as not a complaint: other, with low confidence.";
+  else if (rule === "weak") text = "No sentence was a confident symptom. The closest match is " + out.fault_category + ", returned with low confidence.";
+  else if (rule === "empty") text = "There is no complaint text, so the answer is other.";
+  else text = "One symptom was found, " + out.fault_category + ", and no business rule overrides it.";
+  if (s.c2) text += " A gas smell on this product adds escalation under rule C2.";
+  return text;
+}
+function markWords(text, cls, style, title, red, code) {
+  return text.split(/(\s+)/).map((w) => {
+    if (!w.trim()) return w;
+    const bare = w.toLowerCase().replace(/[^a-z0-9-]/g, "");
+    if (red.has(bare)) return h("mark", { class: "hot", title: "Safety word" }, w);
+    if (code && bare === code) return h("mark", { class: "code", title: "Error code" }, w);
+    return h("span", { class: cls, style: style || "", title: title || "" }, w);
+  });
+}
+function drawMarked(t) {
+  const node = clear($("how-marked")), text = t.cleanup.text, s = t.safety, legend = clear($("how-legend"));
+  const hazard = s.c1_terms.length > 0 || s.gas_smell_in_text;
+  const red = new Set(hazard ? s.watched_words_found.concat(s.typo_repairs.map((p) => p[0])) : []);
+  const code = (t.symptoms.error_code || "").toLowerCase();
+  if (!text) { node.append(h("span", { class: "muted", text: "(empty)" })); return; }
+  let pos = 0; const used = new Set();
+  for (const sent of t.sentences.filter((x) => x.kind === "sentence")) {
+    const at = text.indexOf(sent.text, pos);
+    if (at < 0) continue;
+    if (at > pos) node.append(...markWords(text.slice(pos, at), "dim", "", "Greeting, connector or punctuation", red, code));
+    if (sent.verdict === "symptom") { used.add(sent.category); node.append(...markWords(sent.text, "sym", "border-bottom-color:" + catColor(sent.category), sent.category + " (" + fmt(sent.top[0][1], 2) + ")", red, code)); }
+    else node.append(...markWords(sent.text, "dim", "", "No symptom in this sentence", red, code));
+    pos = at + sent.text.length;
+  }
+  if (pos < text.length) node.append(...markWords(text.slice(pos), t.model_skipped ? "" : "dim", "", "", red, code));
+  for (const c of used) legend.append(h("span", { class: "key" }, h("i", { style: "background:" + catColor(c) }), pretty(c)));
+  if (red.size) legend.append(h("span", { class: "key" }, h("i", { style: "background:var(--danger)" }), "safety word"));
+  if (code) legend.append(h("span", { class: "key" }, h("i", { style: "background:transparent;border:1px solid var(--text-muted)" }), "error code"));
+  if (!t.model_skipped) legend.append(h("span", { class: "key" }, h("i", { style: "background:rgba(255,255,255,.25)" }), "filler, no symptom"));
+}
+function drawTrace(req, out, t) {
+  $("how-summary").textContent = summarise(out, t); drawMarked(t);
+  const box = clear($("how-stages")), th = t.thresholds, s = t.safety, c = t.cleanup;
+  box.append(stage(1, "The ticket exactly as it was sent to the service.", h("pre", { text: JSON.stringify(req, null, 2) })));
+
+  box.append(stage(2, "Text is lowercased and tidied. The product is mapped to one of the seven known values and the age is read as a number, or marked unknown. Odd input never causes an error.",
+    h("dl", { class: "kv", style: "margin-top:0" }, pair("Product", h("span", { class: "mono", text: (c.product_received ?? "missing") + "  →  " + (c.product ?? "not recognised") })),
+      pair("Age", h("span", { class: "mono", text: (c.age_received ?? "missing") + "  →  " + (c.age == null ? "unknown" : c.age + " days") })), pair("Length", h("span", { class: "mono", text: c.characters + " characters" }))),
+    h("pre", { text: c.text || "(empty)" })));
+
+  box.append(stage(3, "Fixed rules read every word of the full text. They are not trained and they run before the model, so a safety mention can never be outvoted. One-letter typos in safety words are repaired first.",
+    h("dl", { class: "kv", style: "margin-top:0" },
+      pair("Words read", h("span", { class: "mono", text: String(s.words_scanned) })),
+      pair("Typos repaired", chipsOf(s.typo_repairs.map((p) => p[0] + " → " + p[1]), "amber")),
+      pair("Watched words", chipsOf(s.watched_words_found)),
+      pair("Rule C1", s.c1_terms.length ? chipsOf(s.c1_terms.map((x) => "reports " + x), "red") : h("span", { class: "small muted", text: "No safety hazard mentioned." })),
+      pair("Rule C2", h("span", { class: "small", text: "Gas smell in the text: " + (s.gas_smell_in_text ? "yes" : "no") + ". Product is an oven, cooktop or water heater: " + (s.gas_product ? "yes" : "no") + "." }))),
+    h("div", { class: (s.c1_terms.length || s.c2) ? "banner" : "calm", style: "margin:1rem 0 0" }, (s.c1_terms.length || s.c2) ? warnIcon() : h("span", { class: "tag green", text: "No escalation" }),
+      h("span", { text: (s.c1_terms.length || s.c2) ? "Escalate is set to true here, by rule " + [s.c1_terms.length ? "C1" : null, s.c2 ? "C2" : null].filter(Boolean).join(" and ") + "." : "Neither safety rule applies, so escalate stays false." }))));
+
+  const sents = t.sentences.filter((x) => x.kind === "sentence"), frags = t.sentences.filter((x) => x.kind === "fragment");
+  box.append(stage(4, "The complaint is cut into sentences so each symptom can be judged on its own. Greetings and connectors such as \"Hi team\" or \"Also\" are dropped. Long sentences are also cut at commas and \"and\".",
+    t.model_skipped ? h("p", { class: "note", text: s.c1_terms.length ? "Skipped: rule C1 already decided the category, so the classifier is not needed." : "Skipped: there is no text to split." })
+      : [h("ol", { style: "margin:0;padding-left:1.25rem" }, sents.slice(0, HOW_MAX_CARDS).map((x) => h("li", { class: "mono small", style: "margin:.25rem 0", text: x.text }))),
+         frags.length ? h("p", { class: "small muted", style: "margin-top:.75rem", text: frags.length + " shorter fragments were also cut out of the long sentences: " + frags.map((x) => "\"" + x.text + "\"").join(", ") + "." }) : null]));
+
+  box.append(stage(5, "A small model (word and letter patterns plus keyword lists, then logistic regression) gives each sentence a probability for 11 symptom categories and for \"no symptom\". A sentence counts as a symptom at " + th.t_symptom + " or above; a fragment needs " + th.t_sub + ".",
+    t.model_skipped ? h("p", { class: "note", text: "Skipped for this ticket." })
+      : t.sentences.slice(0, HOW_MAX_CARDS).map((x) => h("div", { class: "sent" + (x.kind === "fragment" ? " frag" : "") },
+          h("div", { class: "actions", style: "justify-content:space-between" }, h("q", { text: x.text }),
+            h("span", { class: "tag " + (x.verdict === "symptom" ? "green" : x.verdict === "below threshold" ? "amber" : ""), text: x.verdict === "symptom" ? "Symptom: " + pretty(x.category) : x.verdict === "below threshold" ? "Below " + x.threshold : "No symptom" })),
+          h("div", { class: "bars", style: "margin-top:.5rem" }, x.top.map(([label, p]) => barRow(label === "none" ? "No symptom" : pretty(label), p, 1, fmt(p, 2), label === "none" ? "#71717a" : catColor(label)))),
+          x.keywords.length ? h("p", { class: "tiny muted", style: "margin-top:.5rem", text: "Keywords seen: " + x.keywords.map((k) => "\"" + k[1] + "\" (" + k[0] + ")").join(", ") }) : null)),
+    (!t.model_skipped && t.sentences.length > HOW_MAX_CARDS) ? h("p", { class: "note", style: "margin-top:.75rem", text: "Showing the first " + HOW_MAX_CARDS + " of " + t.sentences.length + " sentences and fragments. All of them were classified." }) : null));
+
+  const found = Object.entries(t.symptoms.found);
+  box.append(stage(6, "Everything the classifier and the error-code check found, gathered for the rules. Categories are listed in the order of the taxonomy, which matters when there are two.",
+    h("dl", { class: "kv", style: "margin-top:0" },
+      pair("Symptoms", chipsOf(found.map(([k, v]) => pretty(k) + "  " + fmt(v, 2)), "on")),
+      pair("Error code", h("span", { class: "mono", text: t.symptoms.error_code || "none" })),
+      pair("Best weak guess", h("span", { class: "mono small", text: t.symptoms.weak_guess ? t.symptoms.weak_guess[0] + "  " + fmt(t.symptoms.weak_guess[1], 2) : "none" }))),
+    t.symptoms.installation_backstop ? h("p", { class: "note", style: "margin-top:.75rem", text: "The installation symptom was added by a keyword check: the product is 30 days old or less and the text clearly describes a fit, levelling, connection or first-use problem." }) : null));
+
+  box.append(stage(7, "The business rules are checked from the top in a fixed order. The first one whose condition holds decides the category; the rest are never reached.",
+    h("ul", { class: "rungs" }, t.ladder.filter((x) => x.rule !== "empty" || x.state === "fired").map((x) =>
+      h("li", { class: x.state === "fired" ? "fired" : x.state === "not reached" ? "skip" : "" }, h("span", { class: "mono", text: x.rule === "model" ? "1 symptom" : x.rule === "weak" ? "guess" : x.rule }), h("span", { text: x.question }),
+        h("span", { class: "tag " + (x.state === "fired" ? "on" : ""), text: x.state === "fired" ? "Yes, decides" : x.state === "no" ? "No" : "Not reached" })))),
+    h("p", { class: "note", style: "margin-top:.75rem", text: "Escalation is separate from this ladder: it was fixed in stage 3 by rules C1 and C2 only." })));
+
+  const cf = t.confidence;
+  box.append(stage(8, "The raw score is turned into a confidence that was calibrated on wording the model had not seen, then the five-field answer is returned.",
+    h("div", { class: "arrowline" }, h("span", {}, h("span", { class: "tiny muted", text: "raw score " }), h("b", { text: fmt(cf.raw_score, 2) })), h("span", { class: "muted", text: "→" }),
+      h("span", {}, h("span", { class: "tiny muted", text: "calibrated " }), h("b", { text: fmt(cf.calibrated, 2) })), h("span", { class: "muted", text: "→" }),
+      h("span", {}, h("span", { class: "tiny muted", text: "confidence " }), h("b", { style: "color:var(--accent)", text: fmt(cf.final, 2) })), h("span", { class: "tag", text: RULE_NAMES[cf.rule] || cf.rule })),
+    h("p", { class: "small muted", style: "margin-top:.5rem", text: cf.note }),
+    out.escalate ? h("div", { class: "banner", style: "margin:1rem 0 0" }, warnIcon(), h("span", { text: "Escalate to a person" })) : null,
+    h("div", { class: "tiny muted", style: "margin-top:1rem", text: "Fault category" }), h("div", { class: "cat", text: out.fault_category }),
+    h("div", { class: "reason", text: out.reason }), h("pre", { text: JSON.stringify(out, null, 2) })));
+}
+
+// ---------- start ----------
+updateCount(); checkHealth(); setInterval(checkHealth, 10000);
+setInterval(() => { if (!$("view-dashboard").hidden && !document.hidden) loadMetrics(); }, 5000);
+show(["classify", "bulk", "how", "evals", "dashboard"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "classify");
+</script>
+</body>
+</html>

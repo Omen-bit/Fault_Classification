@@ -1,0 +1,56 @@
+{
+  "created": "2026-10-13 18:26 UTC",
+  "tickets_sha256": "177909b866f43c9b9cf555471d833345ec107441b414adc12ad508fe7be7ba4c",
+  "seeds_sha256": "c00f7feb23ea5edb0d1d525d1da02815d484dbc8af93c92ef7ec9d39a86dc002",
+  "n_tickets": 1000,
+  "n_sentences": 1924,
+  "n_templates": 120,
+  "thresholds": {
+    "t_symptom": 0.3,
+    "t_sub": 0.6,
+    "t_weak": 0.12,
+    "c5_cap": 0.7,
+    "c6_conf": 0.2,
+    "none_veto": 0.5
+  },
+  "calibrator": {
+    "C1": [
+      "const",
+      0.97
+    ],
+    "C3": [
+      "const",
+      0.97
+    ],
+    "C4": [
+      "const",
+      0.9629629629629629
+    ],
+    "C5": [
+      "platt",
+      14.006924722468622,
+      -11.30989164265854
+    ],
+    "C6": [
+      "const",
+      0.8365384615384616
+    ],
+    "model": [
+      "platt",
+      3.998047764578184,
+      0.1831326978070234
+    ],
+    "weak": [
+      "const",
+      0.4
+    ]
+  },
+  "macro_f1_unseen": 0.9743,
+  "train_seconds": 25.45,
+  "versions": {
+    "python": "3.10.0",
+    "sklearn": "1.7.2",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3"
+  }
+}

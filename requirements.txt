@@ -1,0 +1,7 @@
+# scikit-learn is pinned exactly: the saved model in model/ was written by this version.
+scikit-learn==1.7.2
+numpy>=2.0,<3
+pandas>=2.2,<4
+joblib>=1.4,<2
+fastapi>=0.115,<1
+uvicorn>=0.30,<1

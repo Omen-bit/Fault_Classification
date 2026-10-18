@@ -1,0 +1,829 @@
+text,label
+"unit is totally lifeless, nothing happens when I press start",no_power
+won't come on at all,no_power
+"machine not starting, no indication on the panel",no_power
+plugged in but there is no sign of life,no_power
+it just will not boot up,no_power
+appliance is not switching on since morning,no_power
+no response at all when I plug it in,no_power
+cx says unit not powering up,no_power
+"dead unit, no LED",no_power
+"will not start, tried two different sockets",no_power
+it refuses to turn on,no_power
+nothing lights up and nothing runs,no_power
+shut down on its own and never came back on,no_power
+not getting any power to the appliance,no_power
+appliance is off and will not wake up,no_power
+bilkul chalu nahi ho raha,no_power
+"on nahi ho raha hai, koi light nahi",no_power
+start hi nahi hota,no_power
+suddenly switched off and now it is not turning on,no_power
+there is no power in the unit even though the plug is fine,no_power
+does not turn on anymore,no_power
+"unit unresponsive, zero power",no_power
+can't get it to switch on,no_power
+"it was working yesterday, today it is not coming on",no_power
+power light is off and the machine does nothing,no_power
+main switch is on but appliance stays lifeless,no_power
+not turning on after the voltage came back,no_power
+"device is not starting up, no beep, no light",no_power
+"completely non functional, does not start",no_power
+"machine band pada hai, on nahi hota",no_power
+nothing at all when I hit the on switch,no_power
+"unit not powering on, checked the outlet with another device",no_power
+"stays dark, will not power up",no_power
+it died and will not restart,no_power
+won't power up no matter what I do,no_power
+"not coming on, no standby light either",no_power
+water is not getting hot,not_heating
+element is not warming up,not_heating
+food stays cold even after the full time,not_heating
+oven never reaches the set temperature,not_heating
+takes forever to heat,not_heating
+only lukewarm water comes out,not_heating
+heating is very weak,not_heating
+the grill is not getting hot,not_heating
+no hot water since two days,not_heating
+garam nahi ho raha,not_heating
+paani garam nahi hota,not_heating
+"heats too slowly, an hour for a small tank",not_heating
+clothes come out damp because the dryer has no heat,not_heating
+the coil stays cold,not_heating
+temperature is way lower than what I set,not_heating
+"cakes are coming out undercooked, oven runs cool",not_heating
+"dishes are not dried, the heater does not seem to work",not_heating
+it runs but there is no heat at all,not_heating
+microwave runs and the plate turns but food is still cold,not_heating
+"heater not working in heating mode, only cold air",not_heating
+water barely warm even on the highest setting,not_heating
+hob plate is not heating,not_heating
+does not warm the food,not_heating
+the heating function has stopped,not_heating
+"cx reports no heating, unit otherwise running",not_heating
+"not hot enough, thermostat set to max",not_heating
+"oven is not baking properly, temperature seems too low",not_heating
+heat mode on the AC gives room temperature air,not_heating
+geyser se thanda paani aa raha hai,not_heating
+wash water remains cold on hot programs,not_heating
+preheating never finishes,not_heating
+"overheats and burns everything, temperature is far too high",not_heating
+"temperature is not right, it is either too hot or not hot at all",not_heating
+takes double the time to cook anything,not_heating
+no heat from the bottom element,not_heating
+the water does not heat on any program,not_heating
+not cooling at all,not_cooling
+thanda nahi kar raha,not_cooling
+cooling bilkul nahi hai,not_cooling
+the freezer is defrosting by itself and everything melted,not_cooling
+"vegetables are rotting, the fridge is not cold enough",not_cooling
+room does not get cool even after hours,not_cooling
+only blowing room temperature air,not_cooling
+"ice cream is soft, freezer not freezing",not_cooling
+cooling is very poor,not_cooling
+the inside feels warm to the touch,not_cooling
+temperature inside keeps rising,not_cooling
+frost has built up everywhere and it does not chill,not_cooling
+AC is on but there is no chill,not_cooling
+fridge compartment is warm while the freezer is fine,not_cooling
+it stopped chilling,not_cooling
+cooling goes away after some time,not_cooling
+milk went sour because the fridge is warm,not_cooling
+cx reports insufficient cooling,not_cooling
+not maintaining low temperature,not_cooling
+the coils are iced over and it barely cools,not_cooling
+air from the vents is not cool,not_cooling
+no cooling since the weekend,not_cooling
+freezer is not making ice anymore,not_cooling
+unit runs all day but the room stays hot,not_cooling
+"low cooling, thermostat at the coldest setting",not_cooling
+bottles are not getting chilled,not_cooling
+heavy frosting in the freezer and items in the fridge are warm,not_cooling
+cooling kam ho gayi hai,not_cooling
+everything in the freezer thawed,not_cooling
+does not cool below 28 degrees,not_cooling
+the air conditioner throws hot air,not_cooling
+refrigerator is not cold inside,not_cooling
+chiller section is warm,not_cooling
+cooling drops in the afternoon,not_cooling
+meat spoiled as the freezer got warm,not_cooling
+weak cooling from the indoor unit,not_cooling
+water on the floor around the machine,water_leak
+it leaks every time I run it,water_leak
+there is a pool of water below the unit,water_leak
+water keeps seeping out from the base,water_leak
+dripping from the pipe joint,water_leak
+paani leak ho raha hai,water_leak
+neeche se paani tapak raha hai,water_leak
+floor gets wet after each use,water_leak
+water is coming out from the bottom,water_leak
+leakage from the back side,water_leak
+water spilling out from the front during wash,water_leak
+the tank is leaking,water_leak
+overflowing and flooding the bathroom,water_leak
+drops of water falling from the indoor unit,water_leak
+wet patch under the appliance every day,water_leak
+water trickles down the wall from the AC,water_leak
+"leaking badly, had to put a bucket",water_leak
+water escaping from the detergent drawer,water_leak
+"there is a leak somewhere, the kitchen floor is soaked",water_leak
+cx reports water leakage from unit,water_leak
+steady drip from the underside,water_leak
+water comes out of the door area and runs across the floor,water_leak
+small leak near the inlet valve,water_leak
+it overflowed and water went everywhere,water_leak
+fridge is leaking water onto the floor,water_leak
+found water pooled beside the washer,water_leak
+water leaks out when it fills,water_leak
+the bottom tray overflows onto the floor,water_leak
+moisture and water dripping down the front,water_leak
+leak from the heater outlet,water_leak
+water oozing from the seam of the tank,water_leak
+"soaked the carpet again, water leaking out",water_leak
+water running out from beneath,water_leak
+it is dribbling water constantly,water_leak
+puddles keep forming near it,water_leak
+pani bahar aa raha hai machine se,water_leak
+water is not draining out,drainage_or_blockage
+it will not pump the water out,drainage_or_blockage
+tub stays full after the cycle ends,drainage_or_blockage
+the outlet hose is choked,drainage_or_blockage
+sink side drain is clogged and the machine backs up,drainage_or_blockage
+dirty water sits at the bottom,drainage_or_blockage
+filter is jammed with lint,drainage_or_blockage
+paani nikal nahi raha,drainage_or_blockage
+drain nahi ho raha hai,drainage_or_blockage
+water stays inside and smells,drainage_or_blockage
+pump is blocked by something,drainage_or_blockage
+"cannot empty, water level stays the same",drainage_or_blockage
+drain line is clogged,drainage_or_blockage
+the cycle ends but the water has not gone,drainage_or_blockage
+waste water comes back into the tub,drainage_or_blockage
+"blockage in the drain, nothing flows out",drainage_or_blockage
+takes ages to drain,drainage_or_blockage
+the condensate line is clogged,drainage_or_blockage
+water logged inside the drum,drainage_or_blockage
+not emptying after rinse,drainage_or_blockage
+the drain hole at the back of the fridge is choked,drainage_or_blockage
+"cx reports drain blocked, standing water in tub",drainage_or_blockage
+filter fully blocked with debris,drainage_or_blockage
+water does not go down the outlet,drainage_or_blockage
+"drainage problem, tub remains flooded",drainage_or_blockage
+the hose is kinked and it cannot drain,drainage_or_blockage
+stagnant water left inside after washing,drainage_or_blockage
+food bits have clogged the drain,drainage_or_blockage
+drain pump runs but water remains,drainage_or_blockage
+it stops mid cycle full of water,drainage_or_blockage
+"unable to drain, shows water inside",drainage_or_blockage
+water not going out through the pipe,drainage_or_blockage
+the drain tray is full and the tube is blocked,drainage_or_blockage
+drains very slowly and leaves water behind,drainage_or_blockage
+"clogged up, water backs up into the machine",drainage_or_blockage
+"waste pipe blocked, machine remains full",drainage_or_blockage
+it is extremely noisy,noise_or_vibration
+makes a horrible racket,noise_or_vibration
+loud knocking while running,noise_or_vibration
+bahut awaaz karta hai,noise_or_vibration
+awaaz bahut zyada aa rahi hai,noise_or_vibration
+there is a constant whining sound,noise_or_vibration
+shakes the whole floor,noise_or_vibration
+thumping noise on every rotation,noise_or_vibration
+it rattles like something is loose,noise_or_vibration
+jumps around when spinning,noise_or_vibration
+high pitched screech at startup,noise_or_vibration
+clicking and clunking sounds all the time,noise_or_vibration
+a droning noise that keeps us awake,noise_or_vibration
+vibrates so much that things fall off the top,noise_or_vibration
+strange noise from the back,noise_or_vibration
+"unusual sound, like metal scraping",noise_or_vibration
+unit is very loud compared to before,noise_or_vibration
+whistling noise from the indoor unit,noise_or_vibration
+rumbling sound when it runs,noise_or_vibration
+cx reports abnormal noise during operation,noise_or_vibration
+the machine dances across the room,noise_or_vibration
+excessive vibration on spin,noise_or_vibration
+making a ticking noise continuously,noise_or_vibration
+it roars like an engine,noise_or_vibration
+gurgling and knocking noises at night,noise_or_vibration
+"loud hum, can hear it in the next room",noise_or_vibration
+it squeaks with every turn,noise_or_vibration
+noise level has increased a lot,noise_or_vibration
+keeps making a tapping sound,noise_or_vibration
+bangs against the wall while running,noise_or_vibration
+"too much vibration, the counter shakes",noise_or_vibration
+harsh grating noise,noise_or_vibration
+loud thud each time it starts,noise_or_vibration
+sounds like a helicopter,noise_or_vibration
+the outdoor unit makes a rattling racket,noise_or_vibration
+jerks and bounces heavily,noise_or_vibration
+door will not shut,door_seal_or_latch
+the door does not stay closed,door_seal_or_latch
+latch is broken,door_seal_or_latch
+door lock is jammed,door_seal_or_latch
+cannot open the door,door_seal_or_latch
+the gasket is torn,door_seal_or_latch
+rubber lining around the door has come loose,door_seal_or_latch
+darwaza band nahi ho raha,door_seal_or_latch
+door lock kharab hai,door_seal_or_latch
+hinge snapped and the door hangs down,door_seal_or_latch
+door pops open on its own,door_seal_or_latch
+the handle came off and the door cannot be opened,door_seal_or_latch
+lid will not close properly,door_seal_or_latch
+door seal is cracked,door_seal_or_latch
+the catch does not hold the door,door_seal_or_latch
+"door stuck shut, cannot get my laundry out",door_seal_or_latch
+the door is misaligned and leaves a gap,door_seal_or_latch
+rubber seal is mouldy and peeling off,door_seal_or_latch
+door does not click into place,door_seal_or_latch
+"cx reports door latch faulty, door not closing",door_seal_or_latch
+lock stays engaged after the cycle,door_seal_or_latch
+the door swings open during use,door_seal_or_latch
+freezer door does not seal,door_seal_or_latch
+"door is hard to close, have to slam it",door_seal_or_latch
+latch hook broke off,door_seal_or_latch
+lid lock is not releasing,door_seal_or_latch
+oven door will not shut fully,door_seal_or_latch
+the magnetic strip on the door is not sticking,door_seal_or_latch
+door spring is broken,door_seal_or_latch
+seal is damaged and the door does not close tight,door_seal_or_latch
+door handle is loose and the latch does not catch,door_seal_or_latch
+the door gets locked and will not unlock,door_seal_or_latch
+microwave door will not latch,door_seal_or_latch
+gasket hanging out of the door,door_seal_or_latch
+door glass frame came apart and it does not close,door_seal_or_latch
+door ka rubber nikal gaya hai,door_seal_or_latch
+the screen is blank,control_panel_or_display
+keys are not responding,control_panel_or_display
+buttons do not work,control_panel_or_display
+touch controls are dead but the machine runs,control_panel_or_display
+display is flickering with random symbols,control_panel_or_display
+it forgets the time and the programs,control_panel_or_display
+panel is frozen,control_panel_or_display
+knob does not change the settings,control_panel_or_display
+the digits on the display are half missing,control_panel_or_display
+display kaam nahi kar raha,control_panel_or_display
+button dabane par kuch nahi hota,control_panel_or_display
+screen shows gibberish,control_panel_or_display
+timer display is stuck,control_panel_or_display
+"cannot select any program, the panel does not react",control_panel_or_display
+the keypad is unresponsive,control_panel_or_display
+backlight of the display is gone,control_panel_or_display
+start button has to be pressed very hard to register,control_panel_or_display
+control panel lights are blinking randomly,control_panel_or_display
+the settings keep changing by themselves,control_panel_or_display
+remote sensor on the panel does not respond,control_panel_or_display
+display dim and unreadable,control_panel_or_display
+the selector dial spins freely and nothing changes,control_panel_or_display
+"buttons stuck, only the power key works",control_panel_or_display
+"cx reports display blank, unit functional",control_panel_or_display
+child lock icon is stuck on and the keys are locked,control_panel_or_display
+clock resets to zero every day,control_panel_or_display
+panel beeps but does not accept input,control_panel_or_display
+display shows wrong characters,control_panel_or_display
+touchscreen is not sensing my finger,control_panel_or_display
+the temperature readout is not showing,control_panel_or_display
+program selector is not working,control_panel_or_display
+indicator lights on the panel are not coming on,control_panel_or_display
+the display went black but the appliance still runs,control_panel_or_display
+some buttons work and some do not,control_panel_or_display
+the mode button is jammed,control_panel_or_display
+it loses the saved settings after every use,control_panel_or_display
+power comes and goes on its own,electrical_or_control_board
+keeps restarting by itself,electrical_or_control_board
+the PCB has failed,electrical_or_control_board
+main board is gone as per the engineer,electrical_or_control_board
+it switches off and on randomly,electrical_or_control_board
+turns off by itself in the middle and comes back,electrical_or_control_board
+motherboard problem,electrical_or_control_board
+lights flicker when it runs,electrical_or_control_board
+power keeps cutting out,electrical_or_control_board
+loses power for a few seconds every now and then,electrical_or_control_board
+circuit board is damaged,electrical_or_control_board
+the relay on the board keeps clicking and the unit resets,electrical_or_control_board
+PCB kharab ho gaya hai,electrical_or_control_board
+bar bar band chalu ho raha hai,electrical_or_control_board
+electronic module needs replacing,electrical_or_control_board
+the unit reboots itself again and again,electrical_or_control_board
+random shutdowns throughout the day,electrical_or_control_board
+"supply to the unit is unstable, it flickers on and off",electrical_or_control_board
+the control card is burnt out,electrical_or_control_board
+"cx reports intermittent power, suspected board failure",electrical_or_control_board
+there was a short circuit inside,electrical_or_control_board
+it gives a tingling sensation when touched,electrical_or_control_board
+the wiring inside looks melted,electrical_or_control_board
+goes off whenever the compressor starts and then comes back,electrical_or_control_board
+power fluctuates inside the machine,electrical_or_control_board
+the board got damaged after a voltage surge,electrical_or_control_board
+keeps powering down unexpectedly,electrical_or_control_board
+inverter board fault,electrical_or_control_board
+works for a minute then cuts off and restarts,electrical_or_control_board
+sometimes it has power and sometimes it does not,electrical_or_control_board
+the electronics are fried,electrical_or_control_board
+unit resets mid cycle,electrical_or_control_board
+electrical fault in the control unit,electrical_or_control_board
+the plug and cable get very hot,electrical_or_control_board
+main PCB not working,electrical_or_control_board
+it shuts off randomly and starts again later,electrical_or_control_board
+the drum is not rotating,motor_or_drive
+motor does not run,motor_or_drive
+fan is not working,motor_or_drive
+compressor is not starting,motor_or_drive
+the tub does not spin,motor_or_drive
+blower has stopped,motor_or_drive
+the plate inside does not turn,motor_or_drive
+pump is not running,motor_or_drive
+spin cycle does not work,motor_or_drive
+motor hums but nothing moves,motor_or_drive
+drum ghoom nahi raha,motor_or_drive
+motor nahi chal rahi,motor_or_drive
+fan nahi chal raha hai,motor_or_drive
+"belt seems broken, the drum turns freely by hand",motor_or_drive
+agitator does not move,motor_or_drive
+compressor runs for a second and stops,motor_or_drive
+the fan blades are stuck,motor_or_drive
+it only spins slowly,motor_or_drive
+drum is jammed and will not turn,motor_or_drive
+swing flap motor is not moving,motor_or_drive
+the wash arms are not turning,motor_or_drive
+outdoor unit fan stopped,motor_or_drive
+compressor not kicking in,motor_or_drive
+cx reports motor seized,motor_or_drive
+spins in one direction only,motor_or_drive
+"the drive is slipping, no proper spin",motor_or_drive
+fan runs at very low speed,motor_or_drive
+the rotating tray is stuck,motor_or_drive
+motor tries to start and gives up,motor_or_drive
+exhaust fan of the oven does not come on,motor_or_drive
+circulation motor is dead,motor_or_drive
+the impeller is not turning,motor_or_drive
+drum rotates weakly and stops under load,motor_or_drive
+compressor is tripping on overload and never runs,motor_or_drive
+blower speed does not change,motor_or_drive
+the spinner is not working,motor_or_drive
+nobody has come to install it yet,installation_or_setup
+installation is still pending,installation_or_setup
+it was installed wrongly,installation_or_setup
+not levelled properly,installation_or_setup
+the machine is tilted to one side,installation_or_setup
+inlet pipe was not attached,installation_or_setup
+they forgot to fit the drain hose,installation_or_setup
+does not fit in the cabinet,installation_or_setup
+installation nahi hua abhi tak,installation_or_setup
+fitting theek se nahi hui,installation_or_setup
+demo and installation not done,installation_or_setup
+the stand is uneven,installation_or_setup
+mounting bracket is not fixed properly,installation_or_setup
+outdoor unit has not been mounted,installation_or_setup
+need help setting it up,installation_or_setup
+the transit bolts were not removed,installation_or_setup
+using it for the first time and do not know how to connect it,installation_or_setup
+it came without the fittings,installation_or_setup
+the gas connection is not done,installation_or_setup
+plumbing connection is missing,installation_or_setup
+wall mounting is crooked,installation_or_setup
+just unboxed it and cannot set it up,installation_or_setup
+"the feet need adjusting, it is not sitting flat",installation_or_setup
+installation team left the job half done,installation_or_setup
+copper piping was not connected,installation_or_setup
+"wrong size for the slot, will not go in",installation_or_setup
+"cx requests installation, unit delivered last week",installation_or_setup
+it is not fixed to the wall properly,installation_or_setup
+setup is incomplete,installation_or_setup
+first use after delivery and the hoses are not attached,installation_or_setup
+the installer did not connect the water supply,installation_or_setup
+"needs to be levelled, it leans forward",installation_or_setup
+electrical point for it was not set up by the fitter,installation_or_setup
+anti-tip bracket not installed,installation_or_setup
+the installer has not shown up,installation_or_setup
+kitchen cutout is too small for it,installation_or_setup
+thank you,none
+many thanks for your help,none
+please get back to me soon,none
+I am available after 6 pm,none
+my address has changed,none
+this is very frustrating,none
+I have been a loyal customer for years,none
+please do the needful,none
+I bought it during the festival sale,none
+the invoice number is attached,none
+kindly escalate this to your manager,none
+awaiting your reply,none
+my order number is 48213,none
+I work from home so anytime is fine,none
+we have guests coming this weekend,none
+it is a 7 kg model,none
+I called the helpline twice already,none
+your service is the best,none
+very happy with the product,none
+what is the price of the new model,none
+do you have a showroom nearby,none
+please share the brochure,none
+I would like to become a dealer,none
+"limited time offer, call now",none
+you have been selected for a prize,none
+how do I register my product,none
+can I extend my warranty,none
+please cancel my service request,none
+I want to change my appointment time,none
+the technician was very helpful,none
+good job by the team,none
+jaldi kijiye please,none
+dhanyavaad,none
+bahut accha kaam kiya,none
+is this model available in grey,none
+please send the bill copy,none
+where can I download the manual,none
+want to know about exchange offers,none
+I need a quotation for ten units,none
+kindly confirm the visit time,none
+it is under AMC,none
+we bought it two years ago,none
+it was a gift from my parents,none
+I live on the third floor,none
+last time the engineer came late,none
+I do not want a refund,none
+purchased online,none
+serial number is on the back,none
+hello,none
+regards,none
+looking forward to hearing from you,none
+hope you are doing well,none
+"no issues at all, works perfectly",none
+everything is fine now,none
+please update my email id,none
+unsubscribe me from your mailing list,none
+visit our website for cheap loans,none
+I am writing regarding my appliance,none
+this is my third complaint,none
+I am not happy with the support,none
+I need this resolved before the weekend,none
+the product is five months old,none
+earlier it was working fine,none
+my neighbour recommended your brand,none
+please treat this as urgent,none
+warranty card is with me,none
+I have small children at home,none
+send someone today itself,none
+can you tell me the status of my request,none
+when will the spare part arrive,none
+machine dead,no_power
+dead,no_power
+no power,no_power
+not switching on,no_power
+does not start,no_power
+will not turn on since the power came back,no_power
+"totally dead, not even the display",no_power
+machine chalu nahi ho rahi,no_power
+chalu hi nahi hota,no_power
+power nahi aa raha machine mein,no_power
+"unit is not coming on, no light, no sound",no_power
+it stopped working completely and shows no sign of power,no_power
+nothing happens when I plug it in and press the button,no_power
+appliance has gone dead overnight,no_power
+does not respond to the power switch at all,no_power
+"plugged in, switch on, still nothing",no_power
+cx reports unit dead on arrival,no_power
+the oven has no power at all,no_power
+"fridge is off, light inside is also off",no_power
+AC does not turn on with remote or button,no_power
+"washer is dead, cannot start any program",no_power
+it will not power on after the storm,no_power
+"no display, no light, no sound, fully dead",no_power
+band ho gaya aur ab chalu nahi ho raha,no_power
+not heating,not_heating
+no hot water,not_heating
+geyser water not hot,not_heating
+water not hot,not_heating
+oven not heating properly,not_heating
+takes too long to heat,not_heating
+heater garam nahi kar raha,not_heating
+garam paani nahi aa raha,not_heating
+geyser garam paani nahi de raha,not_heating
+khana garam nahi hota microwave mein,not_heating
+"the gas burner will not ignite, only clicking",not_heating
+"burner does not light, there is no flame",not_heating
+the flame keeps going out on the burner,not_heating
+pilot light is out and the water stays cold,not_heating
+one ring on the hob stays cold,not_heating
+grill element does not glow,not_heating
+it heats for a minute and then goes cold,not_heating
+food is still frozen in the middle after the full time,not_heating
+water is warm at first and then turns cold quickly,not_heating
+the oven stays cold even at the highest setting,not_heating
+"dryer runs but clothes stay wet, no warm air",not_heating
+cx reports no heat from unit,not_heating
+rods are not heating up,not_heating
+"bottom of the cake stays raw, the oven is too cool",not_heating
+not cooling,not_cooling
+ac not cooling,not_cooling
+fridge not cooling,not_cooling
+no cooling,not_cooling
+fridge thanda nahi ho raha hai,not_cooling
+AC thandi hawa nahi de raha,not_cooling
+thanda nahi karta,not_cooling
+freezer mein baraf nahi jam rahi,not_cooling
+the compressor runs all the time but the freezer is warm,not_cooling
+it runs continuously and still the inside is warm,not_cooling
+compressor is running but there is no cooling,not_cooling
+the room stays warm although the AC runs for hours,not_cooling
+ice is melting in the freezer,not_cooling
+the fridge feels warm and the butter is soft,not_cooling
+fan blows but the air is not cold,not_cooling
+"cooling was fine yesterday, today it is warm inside",not_cooling
+"only the top shelf is cold, the rest is warm",not_cooling
+"it trips on cooling, the coil is covered in frost",not_cooling
+the back wall is iced up and the food is warm,not_cooling
+gas has leaked from the AC and it does not cool,not_cooling
+cx c/o unit not cooling,not_cooling
+drinks are not cold after a full day,not_cooling
+freezer works but the fridge section is warm,not_cooling
+temperature shows 15 degrees and will not go down,not_cooling
+leaking,water_leak
+water leaking,water_leak
+leak from bottom,water_leak
+water leaking from bottom,water_leak
+machine se paani gir raha hai,water_leak
+paani gir raha hai neeche,water_leak
+paani tapak raha hai,water_leak
+fridge se paani nikal raha hai,water_leak
+paani beh raha hai machine ke neeche se,water_leak
+water drips from the indoor unit onto the bed,water_leak
+the hose joint is leaking,water_leak
+there is always a wet floor under the dishwasher,water_leak
+water is leaking from the door during the wash,water_leak
+tank is dripping from the valve,water_leak
+a puddle forms under the fridge every night,water_leak
+it leaks from the soap drawer,water_leak
+water came out from under the machine and spread over the floor,water_leak
+the pipe at the back is leaking,water_leak
+cx reports leakage from bottom of unit,water_leak
+"slow leak, the cabinet floor is damp",water_leak
+water drops from the AC inside the room,water_leak
+the geyser is leaking from the top,water_leak
+"leak near the drain connection, water on the tiles",water_leak
+water leaks whenever it fills up,water_leak
+not draining,drainage_or_blockage
+water not draining,drainage_or_blockage
+drain blocked,drainage_or_blockage
+water stays in the drum,drainage_or_blockage
+paani nahi nikal raha machine se,drainage_or_blockage
+paani bahar nahi ja raha,drainage_or_blockage
+drain jam ho gaya hai,drainage_or_blockage
+"there is no leak, but the machine does not drain",drainage_or_blockage
+"no leak, but the water does not go out",drainage_or_blockage
+the water does not pump out at the end,drainage_or_blockage
+"DW not draining, standing water",drainage_or_blockage
+standing water in the bottom after the cycle,drainage_or_blockage
+the machine is full of water and will not empty,drainage_or_blockage
+dirty water is left in the tub,drainage_or_blockage
+the drain pipe is choked with lint,drainage_or_blockage
+filter is clogged and the water stays inside,drainage_or_blockage
+it shows a drain error and the water remains,drainage_or_blockage
+water backs up into the sink when it drains,drainage_or_blockage
+cx reports unit not draining,drainage_or_blockage
+"the outlet is blocked, nothing comes out of the hose",drainage_or_blockage
+water collects inside the fridge because the drain hole is blocked,drainage_or_blockage
+the AC drain line is blocked and the tray is full,drainage_or_blockage
+"slow drain, takes very long to empty",drainage_or_blockage
+rinse water stays behind every time,drainage_or_blockage
+noisy,noise_or_vibration
+very noisy,noise_or_vibration
+loud noise,noise_or_vibration
+making noise,noise_or_vibration
+making loud noise,noise_or_vibration
+AC se bahut awaz aa rahi hai,noise_or_vibration
+bahut awaz aa rahi hai,noise_or_vibration
+awaz bahut hai,noise_or_vibration
+machine bahut awaz karti hai,noise_or_vibration
+khat khat ki awaz aati hai,noise_or_vibration
+bahut vibrate karta hai,noise_or_vibration
+noise during spin,noise_or_vibration
+"there was no noise before, now it is very loud",noise_or_vibration
+it hums loudly all night,noise_or_vibration
+buzzing sound from the back,noise_or_vibration
+it makes a knocking sound when it starts,noise_or_vibration
+a rattling sound comes from inside,noise_or_vibration
+the fan makes a scraping sound,noise_or_vibration
+vibration is so strong the shelf shakes,noise_or_vibration
+it shakes a lot during the spin,noise_or_vibration
+cx reports abnormal sound from compressor,noise_or_vibration
+loud clicking every few seconds,noise_or_vibration
+whirring sound that gets louder,noise_or_vibration
+grinding noise when the drum turns,noise_or_vibration
+door not closing,door_seal_or_latch
+door not locking,door_seal_or_latch
+door will not open,door_seal_or_latch
+door stuck,door_seal_or_latch
+darwaza lock nahi ho raha,door_seal_or_latch
+darwaza nahi khul raha,door_seal_or_latch
+door band nahi hota,door_seal_or_latch
+dhakkan band nahi ho raha,door_seal_or_latch
+the door seal is torn,door_seal_or_latch
+door gasket has come off,door_seal_or_latch
+the latch does not click,door_seal_or_latch
+the door pops open during the cycle,door_seal_or_latch
+"fridge door does not shut properly, it stays slightly open",door_seal_or_latch
+the lid does not lock so it will not start the spin,door_seal_or_latch
+door handle is broken and the door cannot be pulled open,door_seal_or_latch
+door remains locked after the wash is over,door_seal_or_latch
+the rubber around the door is damaged,door_seal_or_latch
+hinge is loose and the door sags,door_seal_or_latch
+cx reports door not latching,door_seal_or_latch
+oven door does not close flush,door_seal_or_latch
+the microwave door catch is broken,door_seal_or_latch
+freezer door seal is not sticking,door_seal_or_latch
+the door lock is jammed,door_seal_or_latch
+door swings open by itself,door_seal_or_latch
+display blank,control_panel_or_display
+display not working,control_panel_or_display
+buttons not working,control_panel_or_display
+showing error,control_panel_or_display
+display is showing error,control_panel_or_display
+it shows an error,control_panel_or_display
+error on the display,control_panel_or_display
+display par error aa raha hai,control_panel_or_display
+display band hai,control_panel_or_display
+button kaam nahi kar rahe,control_panel_or_display
+remote does not work and the display on the unit is off,control_panel_or_display
+the display is off but it still runs,control_panel_or_display
+touch buttons do not respond,control_panel_or_display
+panel lights are off although the machine works,control_panel_or_display
+the screen is dead but the fan is running,control_panel_or_display
+display shows strange letters,control_panel_or_display
+the timer does not count down on the display,control_panel_or_display
+the knob turns but the setting does not change,control_panel_or_display
+half the display is not lit,control_panel_or_display
+settings reset themselves every time,control_panel_or_display
+cx reports control panel unresponsive,control_panel_or_display
+the keys beep but nothing is selected,control_panel_or_display
+the digital display flickers and goes blank,control_panel_or_display
+"cannot set the temperature, the buttons are stuck",control_panel_or_display
+power keeps going off and on,electrical_or_control_board
+it switches off by itself,electrical_or_control_board
+keeps restarting,electrical_or_control_board
+board problem,electrical_or_control_board
+PCB issue,electrical_or_control_board
+pcb fault,electrical_or_control_board
+bar bar band ho jata hai,electrical_or_control_board
+apne aap band ho jata hai,electrical_or_control_board
+kabhi chalta hai kabhi nahi,electrical_or_control_board
+the technician says the main board has failed,electrical_or_control_board
+it works for some time and then cuts off on its own,electrical_or_control_board
+it turns itself off after a few minutes and restarts,electrical_or_control_board
+the unit resets in the middle of the program,electrical_or_control_board
+power drops out randomly,electrical_or_control_board
+lights on the unit flicker,electrical_or_control_board
+the control board is faulty,electrical_or_control_board
+main PCB needs to be replaced,electrical_or_control_board
+it loses power for a moment and comes back,electrical_or_control_board
+cx reports intermittent shutdown,electrical_or_control_board
+the supply to the machine is not steady,electrical_or_control_board
+the plug gets hot when the machine runs,electrical_or_control_board
+it shuts down whenever the heater comes on and restarts later,electrical_or_control_board
+the electronic board got damaged in the voltage fluctuation,electrical_or_control_board
+power comes for a second and goes,electrical_or_control_board
+not spinning,motor_or_drive
+drum not spinning,motor_or_drive
+fan not running,motor_or_drive
+compressor not starting,motor_or_drive
+motor not working,motor_or_drive
+microwave plate not rotating,motor_or_drive
+plate not rotating,motor_or_drive
+drum nahi ghoom raha,motor_or_drive
+pankha nahi chal raha,motor_or_drive
+motor nahi chalti,motor_or_drive
+compressor chalu nahi ho raha,motor_or_drive
+clothes are still wet after the spin cycle,motor_or_drive
+"it does not spin, the clothes come out dripping",motor_or_drive
+dishes come out dirty and the arms are not turning,motor_or_drive
+the spray arms are not turning,motor_or_drive
+the wash arms are not rotating,motor_or_drive
+the turntable does not rotate,motor_or_drive
+the drum is stuck and will not move,motor_or_drive
+fan inside does not rotate,motor_or_drive
+"the compressor does not start, it only clicks",motor_or_drive
+"blower is not working, no air comes out",motor_or_drive
+cx reports drum not rotating,motor_or_drive
+the pump motor does not run,motor_or_drive
+it tries to spin and then stops,motor_or_drive
+installation pending,installation_or_setup
+not installed yet,installation_or_setup
+installation not done,installation_or_setup
+installation nahi hua,installation_or_setup
+abhi tak install nahi kiya,installation_or_setup
+technician install karne nahi aaya,installation_or_setup
+where do I connect the inlet pipe,installation_or_setup
+how do I connect the drain hose,installation_or_setup
+just delivered and I do not know where to connect the pipe,installation_or_setup
+bought last week and it wobbles a lot while spinning,installation_or_setup
+the new machine wobbles because it is not level,installation_or_setup
+"it rocks on the floor, the legs are not adjusted",installation_or_setup
+the oven does not fit in my kitchen slot,installation_or_setup
+it does not fit in the space,installation_or_setup
+the unit is too wide for the gap,installation_or_setup
+first time I am using it and it is not set up properly,installation_or_setup
+the stand was not fitted,installation_or_setup
+the outdoor unit is not fixed properly on the bracket,installation_or_setup
+pipe connection is loose after installation,installation_or_setup
+the installer left without finishing the job,installation_or_setup
+it was not levelled during installation,installation_or_setup
+cx requests installation and demo,installation_or_setup
+wrong fitting was used for the gas pipe,installation_or_setup
+the machine is not placed properly and tilts,installation_or_setup
+how do I clean the filter,none
+how do I use the timer,none
+how to set the clock,none
+what does the eco mode do,none
+what is the capacity of this model,none
+can I wash woollens in it,none
+how often should I defrost it,none
+which detergent should I use,none
+"my order number is 48213, when will it be delivered",none
+when will my order be delivered,none
+where is my order,none
+please share the delivery date,none
+I want a refund,none
+I want to return the product,none
+please cancel my order,none
+your technician did not come today,none
+the technician did not come,none
+nobody came for the visit,none
+no one has called me back,none
+I have been waiting for three days,none
+your customer care is not picking up,none
+the delivery guy was rude,none
+kindly share the warranty terms,none
+is it still under warranty,none
+please share the invoice,none
+I need the service centre address,none
+please call me,none
+call me back,none
+hello,none
+hi,none
+ok thanks,none
+thank you for fixing it,none
+it is working fine now,none
+"the fridge is cooling fine now, thank you for fixing it",none
+cooling is fine now,none
+there is no leak,none
+no leak,none
+there is no noise,none
+no noise at all,none
+it does not make any noise,none
+it does not leak,none
+no problem with the door,none
+the display is fine,none
+it was fine until the power cut,none
+there was a power cut yesterday,none
+power cut in our area,none
+we had a power cut last night,none
+asdfgh qwerty,none
+12345,none
+test,none
+please ignore,none
+sent by mistake,none
+thik hai dhanyavaad,none
+bahut badhiya service,none
+jaldi aaiye,none
+kab aayega technician,none
+kitna charge lagega,none
+price kya hai,none
+I am very angry,none
+this is unacceptable,none
+I purchased it in 2019 from the local store,none
+we bought this model two years ago,none
+the model number is on the label and the serial number is below it,none
+I was baking at 400 degrees for ten minutes,none
+I was cooking dinner when it happened,none
+we were washing a normal load of clothes,none
+I had set it to the normal cycle before going to bed,none
+the oven had been on for about an hour,none
+we use it only for normal cooking,none
+no one was injured,none
+luckily nobody was hurt,none
+I contacted the manufacturer and they refused to help,none
+the company said it is out of warranty,none
+they told me it is not part of the recall,none
+a technician came out twice and replaced a part,none
+the repairman said he had seen this before,none
+I paid for the repair myself,none
+I had to take a day off work for the visit,none
+I found many similar complaints online,none
+this product should be recalled,none
+I have photos if you need them,none
+we have two small children in the house,none
+I am worried it could hurt someone,none
+there is mould and a musty smell inside,none
+black mold has grown inside the unit,none
+it smells of mildew after every wash,none
+the sharp edge cut my hand,none
+I cut my finger on the metal fins,none
+the rack slid out and the dish fell,none
+it has caused allergies and coughing,none
+we had to throw away all the food,none
+the food spoiled and we got sick,none
+I would like a refund or a replacement,none
+I want the manufacturer to be held accountable,none
+I filed a complaint with the retailer,none
+the customer service line kept me on hold,none
+we moved into this house last year,none
+it came with the house when we bought it,none
